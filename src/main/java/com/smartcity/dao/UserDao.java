@@ -6,10 +6,12 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface UserDao {
 
-    User save(User user);
+    User create(User user);
 
-    User findById(Integer id);
+    User get(long id);
 
-    boolean deleteById(Integer id);
+    User update(User user);
+
+    boolean delete(long id);
 
 }

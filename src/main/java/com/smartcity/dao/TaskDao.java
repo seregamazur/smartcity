@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TaskDao {
 
-    Task save(Task task);
+    Task create(Task task);
 
-    Task findById(Integer id);
+    Task get(long id);
 
-    boolean deleteById(Integer id);
+    Task update(Task task);
+
+    boolean delete(long id);
 }

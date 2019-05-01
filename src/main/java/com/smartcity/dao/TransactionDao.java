@@ -6,9 +6,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface TransactionDao {
 
-    Transaction save(Transaction transaction);
+    Transaction create(Transaction transaction);
 
-    Transaction findById(Integer id);
+    Transaction get(long id);
 
-    boolean deleteById(Integer id);
+    Transaction update(Transaction transaction);
+
+    boolean delete(long id);
 }
