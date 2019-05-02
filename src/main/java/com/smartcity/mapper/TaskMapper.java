@@ -1,7 +1,6 @@
 package com.smartcity.mapper;
 
 import com.smartcity.domain.Task;
-import com.smartcity.exceptions.NotFoundException;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -10,12 +9,8 @@ import java.time.LocalDateTime;
 
 public class TaskMapper implements RowMapper<Task> {
 
-    public TaskMapper() {
-    }
-
     public Task mapRow(ResultSet resultSet, int i) throws SQLException {
         Task task = new Task();
-        if (resultSet == null) throw new NotFoundException("Task not found: ResultSet is null");
         task.setId(resultSet.getLong("id"));
         task.setTitle(resultSet.getString("title"));
         task.setDeadlineDate(resultSet.getObject("deadline_date", LocalDateTime.class));
