@@ -3,14 +3,16 @@ package com.smartcity.dao;
 import com.smartcity.domain.Role;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface RoleDao {
 
-    Role create(Role role);
+    Optional<Role> create(Role role);
 
-    Role get(long id);
+    Optional<Role> get(long id);
 
-    Role update(Role role);
+    Optional<Role> update(Role role);
 
     boolean delete(long id);
 }
