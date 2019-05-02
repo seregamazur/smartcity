@@ -1,7 +1,6 @@
 package com.smartcity.domain;
 
 import java.time.LocalDateTime;
-import java.util.List;
 import java.util.Objects;
 
 public class Task {
@@ -15,7 +14,6 @@ public class Task {
     private LocalDateTime createdAt;
     private LocalDateTime updatedAt;
     private Long usersOrganizationsId;
-    private List<Transaction> transactionList;
 
     public Task(Long id, String title, String description, LocalDateTime deadlineDate, String taskStatus,
                 Long budget, Long approvedBudget, LocalDateTime createdAt, LocalDateTime updatedAt,
@@ -116,14 +114,6 @@ public class Task {
         this.usersOrganizationsId = usersOrganizationsId;
     }
 
-    public List<Transaction> getTransactionList() {
-        return transactionList;
-    }
-
-    public void setTransactionList(List<Transaction> transactionList) {
-        this.transactionList = transactionList;
-    }
-
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
@@ -138,14 +128,13 @@ public class Task {
                 Objects.equals(approvedBudget, task.approvedBudget) &&
                 Objects.equals(createdAt, task.createdAt) &&
                 Objects.equals(updatedAt, task.updatedAt) &&
-                Objects.equals(usersOrganizationsId, task.usersOrganizationsId) &&
-                Objects.equals(transactionList, task.transactionList);
+                Objects.equals(usersOrganizationsId, task.usersOrganizationsId);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(id, title, description, deadlineDate, taskStatus, budget, approvedBudget,
-                createdAt, updatedAt, usersOrganizationsId, transactionList);
+                createdAt, updatedAt, usersOrganizationsId);
     }
 
     @Override
@@ -161,7 +150,6 @@ public class Task {
                 ", createdAt=" + createdAt +
                 ", updatedAt=" + updatedAt +
                 ", usersOrganizationsId=" + usersOrganizationsId +
-                ", transactionList=" + transactionList +
                 '}';
     }
 }

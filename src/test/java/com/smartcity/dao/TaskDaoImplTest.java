@@ -3,9 +3,14 @@ package com.smartcity.dao;
 import com.smartcity.domain.Task;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
+import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
@@ -43,22 +48,72 @@ class TaskDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetTaskById() {
+    public void testFindTaskById() {
         taskDao.create(task);
-        Task resultTask = taskDao.get(2L);
+        Task resultTask = taskDao.findById(task.getId());
         assertThat(task).isEqualToIgnoringGivenFields(resultTask,
                 "transactionList", "deadlineDate",
                 "createdAt", "updatedAt");
     }
 
     @Test
-    public void testGetTask_InvalidId() {
-        assertThrows(DbOperationException.class, () -> taskDao.get(Long.MAX_VALUE));
+    public void testFindTask_InvalidId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findById(Long.MAX_VALUE));
     }
 
     @Test
-    public void testGetTask_NullId() {
-        assertThrows(DbOperationException.class, () -> taskDao.get(null));
+    public void testFindTask_NullId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findById(null));
+    }
+
+    @Test
+    public void testFindTaskByOrganizationId() {
+        taskDao.create(task);
+        List<Task> resultTaskList = taskDao.findByOrganizationId(1L);
+        List<Task> expTaskList = new ArrayList<>();
+        expTaskList.add(taskDao.findById(1L));
+        expTaskList.add(task);
+        int i = 0;
+        for (Task t1 : resultTaskList) {
+            assertThat(t1).isEqualToIgnoringGivenFields(expTaskList.get(i), "deadlineDate",
+                    "createdAt", "updatedAt");
+            i++;
+        }
+    }
+
+    @Test
+    public void testFindTaskByOrganizationId_InvalidId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findByOrganizationId(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testFindTaskByOrganizationId_NullId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findByOrganizationId(null));
+    }
+
+    @Test
+    public void testFindTaskByUserId() {
+        taskDao.create(task);
+        List<Task> resultTaskList = taskDao.findByUserId(1L);
+        List<Task> expTaskList = new ArrayList<>();
+        expTaskList.add(taskDao.findById(1L));
+        expTaskList.add(task);
+        int i = 0;
+        for (Task t1 : resultTaskList) {
+            assertThat(t1).isEqualToIgnoringGivenFields(expTaskList.get(i), "deadlineDate",
+                    "createdAt", "updatedAt");
+            i++;
+        }
+    }
+
+    @Test
+    public void testFindTaskByUserId_InvalidId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findByUserId(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testFindTaskByUserId_NullId() {
+        assertThrows(NotFoundException.class, () -> taskDao.findByUserId(null));
     }
 
     @Test
@@ -73,7 +128,7 @@ class TaskDaoImplTest extends BaseTest {
 
         taskDao.update(updatedTask);
 
-        Task resultTask = taskDao.get(2L);
+        Task resultTask = taskDao.findById(updatedTask.getId());
 
         assertThat(updatedTask).isEqualToIgnoringGivenFields(resultTask,
                 "deadlineDate", "createdAt",
@@ -115,7 +170,7 @@ class TaskDaoImplTest extends BaseTest {
     @Test
     public void testDeleteTask() {
         taskDao.create(task);
-        assertTrue(taskDao.delete(2L));
+        assertTrue(taskDao.delete(task.getId()));
     }
 
     @AfterEach
