@@ -8,9 +8,9 @@ public interface TaskDao {
 
     Task create(Task task);
 
-    Task get(long id);
+    Task get(Long id);
 
     Task update(Task task);
 
-    boolean delete(long id);
+    boolean delete(Long id);
 }
