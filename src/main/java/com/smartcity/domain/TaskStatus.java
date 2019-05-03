@@ -1,4 +1,5 @@
 package com.smartcity.domain;
 
-public class TaskStatus {
+public enum TaskStatus {
+
 }
