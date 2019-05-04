@@ -3,14 +3,16 @@ package com.smartcity.dao;
 import com.smartcity.domain.Transaction;
 import org.springframework.stereotype.Repository;
 
+import java.util.Optional;
+
 @Repository
 public interface TransactionDao {
 
-    Transaction create(Transaction transaction);
+    Optional<Transaction> create(Transaction transaction);
 
-    Transaction get(long id);
+    Optional<Transaction> get(long id);
 
-    Transaction update(Transaction transaction);
+    Optional<Transaction> update(Transaction transaction);
 
     boolean delete(long id);
 }
