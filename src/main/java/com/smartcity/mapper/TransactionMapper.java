@@ -1,6 +1,7 @@
 package com.smartcity.mapper;
 
 import com.smartcity.domain.Transaction;
+import com.smartcity.exceptions.NotFoundException;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
@@ -19,13 +20,15 @@ public class TransactionMapper implements RowMapper<Transaction> {
     }
 
     public Transaction mapRow(ResultSet resultSet, int i) throws SQLException {
-        Transaction transaction = new Transaction();
-        transaction.setId(resultSet.getLong("id"));
-        transaction.setTaskId(resultSet.getLong("task_id"));
-        transaction.setCurrentBudget(resultSet.getLong("current_budget"));
-        transaction.setTransactionBudget(resultSet.getLong("transaction_budget"));
-        transaction.setCreatedDate(resultSet.getObject("created_date", LocalDateTime.class));
-        transaction.setUpdatedDate(resultSet.getObject("updated_date", LocalDateTime.class));
-        return transaction;
+        if (resultSet != null) {
+            Transaction transaction = new Transaction();
+            transaction.setId(resultSet.getLong("id"));
+            transaction.setTaskId(resultSet.getLong("task_id"));
+            transaction.setCurrentBudget(resultSet.getLong("current_budget"));
+            transaction.setTransactionBudget(resultSet.getLong("transaction_budget"));
+            transaction.setCreatedDate(resultSet.getObject("created_date", LocalDateTime.class));
+            transaction.setUpdatedDate(resultSet.getObject("updated_date", LocalDateTime.class));
+            return transaction;
+        } else throw new NotFoundException("Can't get transaction.Result set is null.");
     }
 }
