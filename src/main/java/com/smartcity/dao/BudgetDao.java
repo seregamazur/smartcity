@@ -8,10 +8,10 @@ public interface BudgetDao {
 
     Budget create(Budget budget);
 
-    Budget get(long id);
+    Budget get();
 
     Budget update(Budget budget);
 
-    boolean delete(long id);
+    boolean delete();
 
 }
