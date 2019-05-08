@@ -97,10 +97,6 @@ public class TransactionDaoImplTest extends BaseTest {
 
     @AfterEach
     public void cleanTransactions() {
-        template.update("set global foreign_key_checks=0");
-        template.update("DELETE FROM Transactions");
-        template.update("set global foreign_key_checks=1");
-        template.update("ALTER TABLE Transactions AUTO_INCREMENT = 1");
-        //everybody will made same method with clearing and autoincrementing their data
+        clearTables("Transactions");
     }
 }
