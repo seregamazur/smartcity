@@ -4,7 +4,7 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.datasource.DriverManagerDataSource;
 
 public class BaseTest {
-
+  
     protected static DriverManagerDataSource dataSource;
     protected static JdbcTemplate template;
 
