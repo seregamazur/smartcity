@@ -9,8 +9,11 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.Test;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrows;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
@@ -58,6 +61,30 @@ public class TransactionDaoImplTest extends BaseTest {
     public void testGetTransaction_invalidId() {
         assertThrows(NotFoundException.class, () -> transDao.get(null));
         assertThrows(NotFoundException.class, () -> transDao.get(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testGetTransactionByTaskId() {
+        transDao.create(transaction);
+        assertThat(transaction).isEqualToIgnoringGivenFields(transDao.getByTaskId(1L).get(0),
+                "createdDate", "updatedDate");
+    }
+
+    @Test
+    public void testGetTransactionByTaskId_amountOfTransactions() {
+        List<Transaction> list = new ArrayList<>();
+        for(int i = 1;i<4;i++){
+            transaction.setId((long) i);
+            transDao.create(transaction);
+            list.add(transaction);
+            assertThat(list.get(i-1)).isEqualToIgnoringGivenFields(transDao.getByTaskId(1L).get(i-1),
+                    "createdDate","updatedDate");
+        }
+    }
+
+    @Test
+    public void testGetTransactionByTaskId_nullList() {
+      assertThrows(NotFoundException.class, () -> transDao.getByTaskId(1L));
     }
 
     @Test
