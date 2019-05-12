@@ -56,8 +56,8 @@ public class TransactionDaoImplTest extends BaseTest {
 
     @Test
     public void testGetTransaction_invalidId() {
-        assertThrows(DbOperationException.class, () -> transDao.get(null));
-        assertThrows(DbOperationException.class, () -> transDao.get(Long.MAX_VALUE));
+        assertThrows(NotFoundException.class, () -> transDao.get(null));
+        assertThrows(NotFoundException.class, () -> transDao.get(Long.MAX_VALUE));
     }
 
     @Test
