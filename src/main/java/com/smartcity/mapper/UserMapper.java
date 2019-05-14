@@ -21,11 +21,6 @@ public class UserMapper implements RowMapper<User> {
 
     @Override
     public User mapRow(ResultSet resultSet, int i) throws SQLException {
-
-        if (resultSet == null) {
-            throw new NotFoundException("ResultSet is null");
-        }
-
         User user = new User();
         user.setId(resultSet.getLong("id"));
         user.setEmail(resultSet.getString("email"));
