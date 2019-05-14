@@ -64,6 +64,20 @@ class UserDaoImplTest extends BaseTest {
         assertThrows(NotFoundException.class, () -> userDao.get(Long.MAX_VALUE));
     }
 
+    @Test
+    public void testFindByEmail_successFlow(){
+        User resultUser = userDao.findByEmail(user.getEmail());
+
+        // Encrypting user password
+        user.setPassword(EncryptionUtil.encryptPassword(user.getPassword()));
+
+        assertThat(user).isEqualToIgnoringGivenFields(resultUser, "id", "createdDate", "updatedDate");
+    }
+
+    @Test
+    public void testFindByEmail_incorrectEmail(){
+        assertThrows(NotFoundException.class, () -> userDao.findByEmail("not_existing_email@gmail.com"));
+    }
 
     @Test
     public void testUpdate_successFlow() {
@@ -110,9 +124,7 @@ class UserDaoImplTest extends BaseTest {
     @Test
     public void testDelete_successFlow() {
         // Deleting user from db
-        template.update("SET GLOBAL foreign_key_checks=0");
         assertTrue(userDao.delete(user.getId()));
-        template.update("SET GLOBAL foreign_key_checks=1");
     }
 
     @Test
