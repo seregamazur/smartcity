@@ -88,7 +88,7 @@ public class BudgetDaoImpl implements BudgetDao {
     }
 
     class Queries {
-        static final String SQL_TRANSACTION_CREATE = "INSERT INTO Budget(id,value) VALUES(1,?)";
+        static final String SQL_TRANSACTION_CREATE = "INSERT INTO Budget(value) VALUES(?)";
         static final String SQL_TRANSACTION_GET = "SELECT * FROM Budget";
         static final String SQL_TRANSACTION_UPDATE = "UPDATE Budget SET value = ?";
         static final String SQL_TRANSACTION_COUNT = "SELECT count(*) FROM Budget";
