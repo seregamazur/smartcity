@@ -6,11 +6,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface OrganizationDao {
 
-    Organization create(Organization org);
+    Organization create(Organization organization);
 
-    Organization get(long id);
+    Organization get(Long id);
 
-    Organization update(Organization org);
+    Organization update(Organization organization);
 
-    boolean delete(long id);
+    boolean delete(Long id);
 }
