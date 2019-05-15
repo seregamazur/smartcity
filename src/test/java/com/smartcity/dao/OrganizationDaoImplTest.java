@@ -18,8 +18,8 @@ class OrganizationDaoImplTest extends BaseTest {
     private static OrganizationDaoImpl organizationDao;
 
     private Organization organization = new Organization(1L,
-            "Комунальна служба",
-            "Сахарова 13",
+            "komunalna",
+            "saharova 13",
             LocalDateTime.now(), LocalDateTime.now());
 
 
@@ -67,8 +67,8 @@ class OrganizationDaoImplTest extends BaseTest {
         organizationDao.create(organization);
         Organization updatedOrganization = new Organization();
         updatedOrganization.setId(organization.getId());
-        updatedOrganization.setName("Комунальна служба");
-        updatedOrganization.setAddress("Вовчинецька 28А");
+        updatedOrganization.setName("komunalna");
+        updatedOrganization.setAddress("vovchunecka 28A");
         updatedOrganization.setUpdatedDate(LocalDateTime.now());
 
         // Updating organization
@@ -84,8 +84,8 @@ class OrganizationDaoImplTest extends BaseTest {
         // Creating updateOrganization
         Organization updatedOrganization = new Organization();
         updatedOrganization.setId(Long.MAX_VALUE);
-        updatedOrganization.setName("Комунальна служба");
-        updatedOrganization.setAddress("Вовчинецька 28А");
+        updatedOrganization.setName("komunalna");
+        updatedOrganization.setAddress("vovchunecka 28A");
         updatedOrganization.setUpdatedDate(LocalDateTime.now());
 
         // Updating organization
