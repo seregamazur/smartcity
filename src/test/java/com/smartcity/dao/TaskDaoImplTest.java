@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class TaskDaoImplTest extends BaseTest {
+public class TaskDaoImplTest extends BaseTest {
 
     private Task task = new Task(2L, "Santa", "Task for Santa",
             LocalDateTime.now(), "TODO",

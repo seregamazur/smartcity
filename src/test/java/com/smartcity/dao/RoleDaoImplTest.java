@@ -10,7 +10,7 @@ import java.time.LocalDateTime;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class RoleDaoImplTest extends BaseTest {
+public class RoleDaoImplTest extends BaseTest {
 
     private static RoleDaoImpl roleDao;
     private Role role = new Role(Long.MAX_VALUE, "User", LocalDateTime.now(), LocalDateTime.now());

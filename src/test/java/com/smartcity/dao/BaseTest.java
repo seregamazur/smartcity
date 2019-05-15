@@ -12,9 +12,9 @@ public class BaseTest {
         // Setting up db
         dataSource = new DriverManagerDataSource();
         dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://192.168.99.100:3306/smartcity");
-        dataSource.setUsername("root");
-        dataSource.setPassword("root");
+        dataSource.setUrl("jdbc:mysql://mysql-2305-0.cloudclusters.net:10007/smartcity");
+        dataSource.setUsername("smartcity");
+        dataSource.setPassword("smartcity");
         template = new JdbcTemplate(dataSource);
         setupQueries();
     }
@@ -32,25 +32,24 @@ public class BaseTest {
     }
 
     public static void tearDown() {
-        template.update("set global foreign_key_checks=0");
-        template.update("TRUNCATE TABLE Users");
-        template.update("TRUNCATE TABLE Organizations");
-        template.update("TRUNCATE TABLE Users_organizations");
-        template.update("TRUNCATE TABLE Tasks");
-        template.update("TRUNCATE Table Transactions");
-        template.update("TRUNCATE TABLE Comments");
-        template.update("TRUNCATE TABLE Roles");
-        template.update("TRUNCATE TABLE Users_roles");
-        template.update("TRUNCATE TABLE Budget");
-        template.update("set global foreign_key_checks=1");
+        template.batchUpdate("set foreign_key_checks=0",
+            "TRUNCATE TABLE Users",
+            "TRUNCATE TABLE Organizations",
+            "TRUNCATE TABLE Users_organizations",
+            "TRUNCATE TABLE Tasks",
+            "TRUNCATE TABLE Transactions",
+            "TRUNCATE TABLE Comments",
+            "TRUNCATE TABLE Roles",
+            "TRUNCATE TABLE Users_roles",
+            "TRUNCATE TABLE Budget",
+            "set foreign_key_checks=1");
     }
 
     public void clearTables(String... tableNames) {
-        for (String tableName : tableNames) {
-            template.update("SET GLOBAL foreign_key_checks=0");
-            template.update("DELETE FROM " + tableName);
-            template.update("SET GLOBAL foreign_key_checks=1");
-            template.update("ALTER TABLE " + tableName + " AUTO_INCREMENT = 1");
-        }
+        final String[] cleanupQueries = new String[tableNames.length + 2];
+        cleanupQueries[0] = "SET foreign_key_checks=0";
+        cleanupQueries[cleanupQueries.length - 1] = "SET foreign_key_checks=1";
+        System.arraycopy(tableNames, 0, cleanupQueries, 1, tableNames.length);
+        template.batchUpdate(cleanupQueries);
     }
 }
