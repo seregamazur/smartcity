@@ -8,9 +8,9 @@ public interface CommentDao {
 
     Comment create(Comment comment);
 
-    Comment get(long id);
+    Comment get(Long id);
 
     Comment update(Comment comment);
 
-    boolean delete(long id);
+    boolean delete(Long id);
 }
