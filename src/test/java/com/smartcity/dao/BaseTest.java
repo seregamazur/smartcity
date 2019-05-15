@@ -49,7 +49,9 @@ public class BaseTest {
         final String[] cleanupQueries = new String[tableNames.length + 2];
         cleanupQueries[0] = "SET foreign_key_checks=0";
         cleanupQueries[cleanupQueries.length - 1] = "SET foreign_key_checks=1";
-        System.arraycopy(tableNames, 0, cleanupQueries, 1, tableNames.length);
+        for (int index = 0; index < tableNames.length; index++) {
+            cleanupQueries[index + 1] = "TRUNCATE TABLE " + tableNames[index];
+        }
         template.batchUpdate(cleanupQueries);
     }
 }
