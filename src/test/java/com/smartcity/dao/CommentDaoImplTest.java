@@ -4,6 +4,7 @@ import com.smartcity.domain.Comment;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
 import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
 
@@ -12,18 +13,10 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class CommentDaoImplTest extends BaseTest {
 
-
-    private static CommentDao commentDao;
+    @Autowired
+    private CommentDao commentDao;
 
     private Comment comment;
-
-    @BeforeAll
-    public static void beforeAll() {
-        setup();
-        commentDao = new CommentDaoImpl(dataSource);
-
-    }
-
 
     @BeforeEach
     public void beforeEach() {
@@ -59,7 +52,7 @@ public class CommentDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void tstCreateComment_missingTaskId() {
+    public void testCreateComment_missingTaskId() {
         comment.setTaskId(null);
         assertThrows(DbOperationException.class, () -> commentDao.create(comment));
     }
@@ -71,7 +64,7 @@ public class CommentDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void tstCreateComment_missingUserId() {
+    public void testCreateComment_missingUserId() {
         comment.setUserId(null);
         assertThrows(DbOperationException.class, () -> commentDao.create(comment));
     }
@@ -132,8 +125,4 @@ public class CommentDaoImplTest extends BaseTest {
         clearTables("Comments");
     }
 
-    @AfterAll
-    public static void afterAll() {
-        tearDown();
-    }
 }

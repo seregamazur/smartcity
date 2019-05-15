@@ -1,25 +1,27 @@
 package com.smartcity.dao;
 
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.smartcity.domain.Role;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.*;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class RoleDaoImplTest extends BaseTest {
 
-    private static RoleDaoImpl roleDao;
-    private Role role = new Role(Long.MAX_VALUE, "User", LocalDateTime.now(), LocalDateTime.now());
+    @Autowired
+    private RoleDaoImpl roleDao;
 
-    @BeforeAll
-    public static void start() {
-        setup();
-        roleDao = new RoleDaoImpl(dataSource);
-    }
+    private Role role = new Role(Long.MAX_VALUE, "User", LocalDateTime.now(), LocalDateTime.now());
 
     @Test
     public void createRole() {
@@ -36,7 +38,7 @@ public class RoleDaoImplTest extends BaseTest {
     @Test
     public void getRole() {
         assertThat(role).isEqualToIgnoringGivenFields(roleDao.get(role.getId()),
-                "createdDate", "updatedDate");
+            "createdDate", "updatedDate");
     }
 
     @Test
@@ -76,11 +78,6 @@ public class RoleDaoImplTest extends BaseTest {
         assertThrows(DbOperationException.class, () -> roleDao.update(role));
     }
 
-    @AfterAll
-    public static void cleanUp() {
-        tearDown();
-    }
-
     @BeforeEach
     public void createTestRole() {
         roleDao.create(role);
@@ -90,6 +87,5 @@ public class RoleDaoImplTest extends BaseTest {
     public void cleanRoles() {
         clearTables("Roles");
     }
-
 
 }
