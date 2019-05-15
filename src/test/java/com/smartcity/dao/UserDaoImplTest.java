@@ -9,7 +9,7 @@ import org.junit.jupiter.api.*;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-class UserDaoImplTest extends BaseTest {
+public class UserDaoImplTest extends BaseTest {
     private static UserDaoImpl userDao;
     private User user;
 
