@@ -5,6 +5,7 @@ import com.smartcity.exceptions.NotFoundException;
 import com.smartcity.exceptions.RecordExistsException;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.jdbc.core.JdbcTemplate;
@@ -13,12 +14,12 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class BudgetDaoImplTest extends BaseTest {
 
-    private BudgetDaoImpl budgetDao;
+    private static BudgetDaoImpl budgetDao;
     private Budget budget = new Budget(10000L);
 
-    @BeforeEach
-    public void setup() {
-        super.setup();
+    @BeforeAll
+    public static void setupBudgetTests() {
+        setup();
         //dataSource.setUrl("jdbc:mysql://localhost:3306/mydb?useSSL=false");
         budgetDao = new BudgetDaoImpl(dataSource);
     }
