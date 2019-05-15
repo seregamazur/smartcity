@@ -3,7 +3,6 @@ package com.smartcity.dao;
 import com.smartcity.domain.Budget;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import com.smartcity.exceptions.RecordExistsException;
 import com.smartcity.mapper.BudgetMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -22,8 +21,11 @@ public class BudgetDaoImpl implements BudgetDao {
         template = new JdbcTemplate(source);
     }
 
-    public Budget create(Budget budget) {
+    public Budget createOrUpdate(Budget budget) {
+
+        //check if a record exists in Budget
         int amount;
+        int affected;
         try {
             amount = template.queryForObject(Queries.SQL_TRANSACTION_COUNT, Integer.class);
         } catch (Exception e) {
@@ -31,23 +33,43 @@ public class BudgetDaoImpl implements BudgetDao {
             logger.error(err);
             throw new DbOperationException(err);
         }
+
+        //if a record already exists in DB, update it
         if (amount > 0) {
-            String err = "Budget already exists in DB.";
-            logger.error(err);
-            throw new RecordExistsException(err);
+
+            try {
+                affected = template.update(Queries.SQL_TRANSACTION_UPDATE,
+                        budget.getValue());
+            } catch (Exception e) {
+                String err = "Failed updating Budget in DB: " + e.getMessage();
+                logger.error(err);
+                throw new DbOperationException(err);
+            }
+
+            if (affected < 1) {
+                throw new DbOperationException("Could not update Budget(updated 0 entries)");
+            }
+
+            return budget;
         }
 
+        //otherwise, create a new record
         try {
-            int affected = template.update(Queries.SQL_TRANSACTION_CREATE,
+            logger.warn("No budget entry found in DB; creating a new entry!");
+            affected = template.update(Queries.SQL_TRANSACTION_CREATE,
                     budget.getValue());
-            if (affected < 1)
-                throw new DbOperationException("Could not create Budget");
-            return budget;
-        } catch (Exception e) {
+        } catch (
+                Exception e) {
             String err = "Failed inserting Budget into DB: " + e.getMessage();
             logger.error(err);
             throw new DbOperationException(err);
         }
+
+        if (affected < 1) {
+            throw new DbOperationException("Could not create Budget(created 0 entries)");
+        }
+
+        return budget;
 
     }
 
@@ -65,46 +87,10 @@ public class BudgetDaoImpl implements BudgetDao {
         }
     }
 
-    public Budget update(Budget budget) {
-        try {
-            get();
-        } catch (NotFoundException e) {
-            throw e;
-        } catch (Exception e) {
-            String err = "Failed checking Budget exists: " + e.getMessage();
-            logger.error(err);
-            throw new DbOperationException(err);
-        }
-
-        try {
-            int affected = template.update(Queries.SQL_TRANSACTION_UPDATE,
-                    budget.getValue());
-            if (affected < 1)
-                throw new DbOperationException("Could not create Budget");
-            return budget;
-        } catch (Exception e) {
-            String err = "Failed updating Budget in DB: " + e.getMessage();
-            logger.error(err);
-            throw new DbOperationException(err);
-        }
-    }
-
-    public boolean delete() {
-        try {
-            int affected = template.update(Queries.SQL_TRANSACTION_DELETE);
-            return affected > 0;
-        } catch (Exception e) {
-            String err = "Failed removing Budget from DB: " + e.getMessage();
-            logger.error(err);
-            throw new DbOperationException(err);
-        }
-    }
-
     class Queries {
         static final String SQL_TRANSACTION_CREATE = "INSERT INTO Budget(id,value) VALUES(1,?)";
         static final String SQL_TRANSACTION_GET = "SELECT * FROM Budget";
         static final String SQL_TRANSACTION_UPDATE = "UPDATE Budget SET value = ?";
-        static final String SQL_TRANSACTION_DELETE = "DELETE FROM Budget";
         static final String SQL_TRANSACTION_COUNT = "SELECT count(*) FROM Budget";
     }
 }

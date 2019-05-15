@@ -3,6 +3,7 @@ package com.smartcity.dao;
 import com.smartcity.domain.Budget;
 import com.smartcity.exceptions.NotFoundException;
 import com.smartcity.exceptions.RecordExistsException;
+import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -18,24 +19,18 @@ public class BudgetDaoImplTest extends BaseTest {
     @BeforeEach
     public void setup() {
         super.setup();
-        //dataSource.setUrl("jdbc:mysql://localhost:3306/smartcity");
+        //dataSource.setUrl("jdbc:mysql://localhost:3306/mydb?useSSL=false");
         budgetDao = new BudgetDaoImpl(dataSource);
     }
 
     @Test
     public void testCreateBudget() {
-        assertEquals(budgetDao.create(budget), budget);
-    }
-
-    @Test
-    public void testCreateBudget_alreadyExists() {
-        budgetDao.create(budget);
-        assertThrows(RecordExistsException.class, () -> budgetDao.create(budget));
+        assertEquals(budgetDao.createOrUpdate(budget), budget);
     }
 
     @Test
     public void testGetBudget() {
-        budgetDao.create(budget);
+        budgetDao.createOrUpdate(budget);
 
         Budget created = budgetDao.get();
 
@@ -49,36 +44,24 @@ public class BudgetDaoImplTest extends BaseTest {
 
     @Test
     public void testUpdateBudget() {
-        budgetDao.create(budget);
+        budgetDao.createOrUpdate(budget);
 
         budget.setValue(20000L);
-        budgetDao.update(budget);
+        budgetDao.createOrUpdate(budget);
 
         Budget updated = budgetDao.get();
 
         assertEquals(updated, budget);
     }
 
-    @Test
-    public void testUpdateBudget_noRowsFound() {
-        assertThrows(NotFoundException.class, () -> budgetDao.update(budget));
-    }
 
-    @Test
-    public void testDeleteBudget() {
-        budgetDao.create(budget);
-
-        assertTrue(budgetDao.delete());
-    }
-
-    @Test
-    public void testDeleteBudget_noRowsFound() {
-        assertFalse(budgetDao.delete());
+    @AfterAll
+    public static void afterAll(){
+        tearDown();
     }
 
     @AfterEach
-    public void tearDown() {
-        JdbcTemplate template = new JdbcTemplate(dataSource);
-        template.update("DELETE FROM Budget");
+    public void afterEach() {
+        clearTables("Budget");
     }
 }

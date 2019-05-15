@@ -14,11 +14,11 @@ public class BudgetMapper implements RowMapper<Budget> {
         return instance;
     }
 
-    public Budget mapRow(ResultSet resultSet, int i) throws SQLException {
+    private BudgetMapper() {
 
-        if (resultSet == null) {
-            return null;
-        }
+    }
+
+    public Budget mapRow(ResultSet resultSet, int i) throws SQLException {
 
         Budget budget = new Budget();
         budget.setValue(resultSet.getLong("value"));

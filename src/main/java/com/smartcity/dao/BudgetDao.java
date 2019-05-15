@@ -6,12 +6,8 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface BudgetDao {
 
-    Budget create(Budget budget);
+    Budget createOrUpdate(Budget budget);
 
     Budget get();
-
-    Budget update(Budget budget);
-
-    boolean delete();
 
 }
