@@ -1,7 +1,6 @@
 package com.smartcity.mapper;
 
 import com.smartcity.domain.User;
-import com.smartcity.exceptions.NotFoundException;
 import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;

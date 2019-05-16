@@ -1,0 +1,45 @@
+package com.smartcity.controller;
+
+import com.smartcity.dto.UserDto;
+import com.smartcity.service.UserServiceImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.*;
+
+@RestController
+@RequestMapping("/users")
+public class UserController {
+
+    private UserServiceImpl userService;
+
+    @Autowired
+    public UserController(UserServiceImpl userService) {
+        this.userService = userService;
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto getById(@PathVariable("id") Long id) {
+        return userService.get(id);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @GetMapping(value = "/", produces = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto findByEmail(@RequestParam("email") String email) {
+        return userService.findByEmail(email);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
+    public UserDto updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+        userDto.setId(id);
+        return userService.update(userDto);
+    }
+
+    @ResponseStatus(HttpStatus.OK)
+    @DeleteMapping(value ="/{id}")
+    public boolean deleteUser(@PathVariable("id") Long id) {
+        return userService.delete(id);
+    }
+}
