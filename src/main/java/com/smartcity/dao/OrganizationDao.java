@@ -1,7 +1,11 @@
 package com.smartcity.dao;
 
 import com.smartcity.domain.Organization;
+import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
+@Repository
 public interface OrganizationDao {
 
     Organization create(Organization organization);
@@ -11,4 +15,6 @@ public interface OrganizationDao {
     Organization update(Organization organization);
 
     boolean delete(Long id);
+
+    List<Organization> getAll();
 }
