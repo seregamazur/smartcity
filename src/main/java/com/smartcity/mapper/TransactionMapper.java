@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 public class TransactionMapper implements RowMapper<Transaction> {
 
@@ -24,8 +23,8 @@ public class TransactionMapper implements RowMapper<Transaction> {
         transaction.setTaskId(resultSet.getLong("task_id"));
         transaction.setCurrentBudget(resultSet.getLong("current_budget"));
         transaction.setTransactionBudget(resultSet.getLong("transaction_budget"));
-        transaction.setCreatedDate(resultSet.getObject("created_date", LocalDateTime.class));
-        transaction.setUpdatedDate(resultSet.getObject("updated_date", LocalDateTime.class));
+        transaction.setCreatedDate(resultSet.getTimestamp("created_date").toLocalDateTime());
+        transaction.setUpdatedDate(resultSet.getTimestamp("updated_date").toLocalDateTime());
         return transaction;
     }
 }
