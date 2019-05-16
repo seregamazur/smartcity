@@ -3,32 +3,32 @@ package com.smartcity.dao;
 import com.smartcity.domain.Comment;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
 public class CommentDaoImplTest extends BaseTest {
 
+    private Comment comment = new Comment(
+            1L, "Comment for comment",
+            LocalDateTime.now(), LocalDateTime.now(),
+            1L, 1L
+    );
+
     @Autowired
     private CommentDao commentDao;
 
-    private Comment comment;
-
-    @BeforeEach
-    public void beforeEach() {
-        LocalDateTime createdDate = LocalDateTime.now();
-        comment = new Comment();
-        comment.setDescription("Comment for comment");
-        comment.setCreatedDate(createdDate);
-        comment.setUpdatedDate(createdDate);
-        comment.setTaskId(1L);
-        comment.setUserId(1L);
-
-        commentDao.create(comment);
+    @AfterAll
+    public static void afterAll() {
+        tearDown();
     }
 
     @Test
@@ -70,16 +70,17 @@ public class CommentDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testGetComment() {
-        Comment result = commentDao.get(comment.getId());
+    public void testFindComment() {
+        commentDao.create(comment);
+        Comment result = commentDao.findById(comment.getId());
         assertThat(comment).
                 isEqualToIgnoringGivenFields(result,
                         "createdDate", "updatedDate");
     }
 
     @Test
-    public void testGetComment_invalidId() {
-        assertThrows(NotFoundException.class, () -> commentDao.get(Long.MAX_VALUE));
+    public void testFindComment_invalidId() {
+        assertThrows(NotFoundException.class, () -> commentDao.findById(Long.MAX_VALUE));
 
     }
 
@@ -93,7 +94,7 @@ public class CommentDaoImplTest extends BaseTest {
                 1L, 1L);
 
         commentDao.update(updatedComment);
-        Comment resultComment = commentDao.get(updatedComment.getId());
+        Comment resultComment = commentDao.findById(updatedComment.getId());
         assertThat(updatedComment).isEqualToIgnoringGivenFields(resultComment,
                 "createdDate", "updatedDate");
     }
@@ -111,6 +112,7 @@ public class CommentDaoImplTest extends BaseTest {
 
     @Test
     public void testDeleteComment() {
+        commentDao.create(comment);
         assertTrue(commentDao.delete(comment.getId()));
     }
 
@@ -120,9 +122,56 @@ public class CommentDaoImplTest extends BaseTest {
 
     }
 
+    @Test
+    public void testFindCommentByTaskId() {
+        commentDao.create(comment);
+        assertThat(comment).isEqualToIgnoringGivenFields(commentDao.findAllByTaskId(1L).get(0),
+                "createdDate", "updatedDate");
+    }
+
+    @Test
+    public void testFindCommentByUserId() {
+        commentDao.create(comment);
+        assertThat(comment).isEqualToIgnoringGivenFields(commentDao.findAllByTaskId(1L).get(0),
+                "createdDate", "updatedDate");
+    }
+
+    @Test
+    public void testFindCommentByTaskId_nullList() {
+        assertThrows(NotFoundException.class, () -> commentDao.findAllByTaskId(1L));
+    }
+
+    @Test
+    public void testFindCommentByUserId_nullList() {
+        assertThrows(NotFoundException.class, () -> commentDao.findAllByUserId(1L));
+    }
+
+    @Test
+    public void testFindAllCommentByTaskId_amountOfComment() {
+        List<Comment> list = new ArrayList<>();
+        for (int i = 1; i < 4; i++) {
+            comment.setId((long) i);
+            commentDao.create(comment);
+            list.add(comment);
+            assertThat(list.get(i - 1)).isEqualToIgnoringGivenFields(commentDao.findAllByTaskId(1L).get(i - 1),
+                    "createdDate", "updatedDate");
+        }
+    }
+
+    @Test
+    public void testFindAllCommentByUserId_amountOfComment() {
+        List<Comment> list = new ArrayList<>();
+        for (int i = 1; i < 4; i++) {
+            comment.setId((long) i);
+            commentDao.create(comment);
+            list.add(comment);
+            assertThat(list.get(i - 1)).isEqualToIgnoringGivenFields(commentDao.findAllByUserId(1L).get(i - 1),
+                    "createdDate", "updatedDate");
+        }
+    }
+
     @AfterEach
     public void afterEach() {
         clearTables("Comments");
     }
-
 }

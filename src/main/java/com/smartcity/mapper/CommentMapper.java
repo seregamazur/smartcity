@@ -5,7 +5,6 @@ import org.springframework.jdbc.core.RowMapper;
 
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.time.LocalDateTime;
 
 public class CommentMapper implements RowMapper<Comment> {
 
@@ -23,8 +22,8 @@ public class CommentMapper implements RowMapper<Comment> {
         Comment comment = new Comment();
         comment.setId(resultSet.getLong("id"));
         comment.setDescription(resultSet.getString("description"));
-        comment.setCreatedDate(resultSet.getObject("created_date", LocalDateTime.class));
-        comment.setUpdatedDate(resultSet.getObject("updated_date", LocalDateTime.class));
+        comment.setCreatedDate(resultSet.getTimestamp("created_date").toLocalDateTime());
+        comment.setUpdatedDate(resultSet.getTimestamp("updated_date").toLocalDateTime());
         comment.setUserId(resultSet.getLong("user_id"));
         comment.setTaskId(resultSet.getLong("task_id"));
         return comment;
