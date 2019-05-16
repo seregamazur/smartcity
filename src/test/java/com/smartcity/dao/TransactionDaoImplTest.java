@@ -22,8 +22,9 @@ public class TransactionDaoImplTest extends BaseTest {
     private Transaction transaction = new Transaction(1L, 1L,
             5000L, 3000L,
             LocalDateTime.now(), LocalDateTime.now());
+
     @Autowired
-    private TransactionDao transDao;
+    private TransactionDaoImpl transDao;
 
 //    @BeforeAll
 //    public static void start() {
