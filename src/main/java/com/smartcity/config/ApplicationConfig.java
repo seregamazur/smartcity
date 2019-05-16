@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Import;
 import org.springframework.context.annotation.PropertySource;
 
-@Import({DBConfig.class, WebSecurityConfig.class})
+@Import({DBConfig.class, WebSecurityConfig.class, SwaggerConfig.class})
 @Configuration
 @PropertySource(value = "classpath:application-test.properties")
 @ComponentScan(basePackages = "com.smartcity")

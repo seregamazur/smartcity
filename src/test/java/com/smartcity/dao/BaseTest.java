@@ -12,9 +12,11 @@ import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
 import com.smartcity.config.ApplicationConfig;
+import org.springframework.test.context.web.WebAppConfiguration;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
+@WebAppConfiguration
 @ContextConfiguration(classes = { ApplicationConfig.class })
 public class BaseTest {
 
