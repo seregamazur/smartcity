@@ -1,25 +1,53 @@
 package com.smartcity.dao;
 
-import org.springframework.jdbc.core.JdbcTemplate;
-import org.springframework.jdbc.datasource.DriverManagerDataSource;
+import javax.sql.DataSource;
 
+import org.junit.jupiter.api.AfterAll;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.context.ContextConfiguration;
+import org.springframework.test.context.junit.jupiter.SpringExtension;
+
+import com.smartcity.config.ApplicationConfig;
+
+@ExtendWith(SpringExtension.class)
+@ActiveProfiles("test")
+@ContextConfiguration(classes = { ApplicationConfig.class })
 public class BaseTest {
 
-    protected static DriverManagerDataSource dataSource;
+    @Autowired
+    protected DataSource dataSource;
     protected static JdbcTemplate template;
 
-    public static void setup() {
+    private static boolean isInitialized = false;
+
+    @BeforeEach
+    public void setupBudgetTests() {
+        if(!isInitialized) {
+            setup();
+            isInitialized = true;
+        }
+    }
+
+    @AfterAll
+    public static void afterAll(){
+        try {
+            tearDown();
+        } finally {
+            isInitialized = false;
+        }
+    }
+
+    private void setup() {
         // Setting up db
-        dataSource = new DriverManagerDataSource();
-        dataSource.setDriverClassName("com.mysql.cj.jdbc.Driver");
-        dataSource.setUrl("jdbc:mysql://mysql-2305-0.cloudclusters.net:10007/smartcity");
-        dataSource.setUsername("smartcity");
-        dataSource.setPassword("smartcity");
         template = new JdbcTemplate(dataSource);
         setupQueries();
     }
 
-    protected static void setupQueries() {
+    private void setupQueries() {
         template.update("INSERT INTO Users() VALUES (1,'santa@sasa','1234','Saaanta','Saatat','09898965456', true,'2019-05-05','2019-05-05');");
         template.update("INSERT INTO Organizations() VALUES (1,'santa','ssassa','2019-05-05','2019-05-05');");
         template.update("INSERT INTO Users_organizations() VALUES (1,1,1,'2019-05-05','2019-05-05');");

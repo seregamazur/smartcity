@@ -1,5 +1,7 @@
 package com.smartcity.dao;
 
+import org.springframework.stereotype.Repository;
+
 import com.smartcity.domain.Comment;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
@@ -16,6 +18,7 @@ import java.sql.PreparedStatement;
 import java.sql.Statement;
 import java.time.LocalDateTime;
 
+@Repository
 public class CommentDaoImpl implements CommentDao {
 
     private static final Logger       logger = LoggerFactory.getLogger(CommentDaoImpl.class);

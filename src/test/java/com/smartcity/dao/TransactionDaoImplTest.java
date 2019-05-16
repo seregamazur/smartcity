@@ -1,14 +1,14 @@
 package com.smartcity.dao;
 
+import java.time.LocalDateTime;
+
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.smartcity.domain.Transaction;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.AfterEach;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.Test;
-
-import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertThrows;
@@ -17,21 +17,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 public class TransactionDaoImplTest extends BaseTest {
 
     private Transaction transaction = new Transaction(1L, 1L,
-            5000L, 3000L,
-            LocalDateTime.now(), LocalDateTime.now());
-    private static TransactionDaoImpl transDao;
+        5000L, 3000L,
+        LocalDateTime.now(), LocalDateTime.now());
 
-    @BeforeAll
-    public static void start() {
-        setup();
-        transDao = new TransactionDaoImpl(dataSource);
-    }
+    @Autowired
+    private TransactionDao transDao;
 
     @Test
     public void testCreateTransaction() {
         assertThat(transDao.create(transaction))
-                .isEqualToIgnoringGivenFields(transaction,
-                        "createdDate", "updatedDate");
+            .isEqualToIgnoringGivenFields(transaction,
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -50,8 +46,8 @@ public class TransactionDaoImplTest extends BaseTest {
     public void testGetTransaction() {
         transDao.create(transaction);
         assertThat(transaction).
-                isEqualToIgnoringGivenFields(transDao.get(1L),
-                        "createdDate", "updatedDate");
+            isEqualToIgnoringGivenFields(transDao.get(1L),
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -64,18 +60,18 @@ public class TransactionDaoImplTest extends BaseTest {
     public void testUpdateTransaction() {
         transDao.create(transaction);
         Transaction updatedTransaction = new Transaction(1L, 1L,
-                800000L, 44000L,
-                LocalDateTime.now(), LocalDateTime.now());
+            800000L, 44000L,
+            LocalDateTime.now(), LocalDateTime.now());
         transDao.update(updatedTransaction);
         assertThat(transDao.get(1L)).isEqualToIgnoringGivenFields(updatedTransaction,
-                "createdDate", "updatedDate");
+            "createdDate", "updatedDate");
     }
 
     @Test
     public void testUpdateTransaction_invalidId() {
         Transaction newTransaction = new Transaction(500L, 1L,
-                800000L, 44000L,
-                LocalDateTime.now(), LocalDateTime.now());
+            800000L, 44000L,
+            LocalDateTime.now(), LocalDateTime.now());
         assertThrows(NotFoundException.class, () -> transDao.update(newTransaction));
     }
 
@@ -88,11 +84,6 @@ public class TransactionDaoImplTest extends BaseTest {
     @Test
     public void testDeleteTransaction_invalidId() {
         assertThrows(NotFoundException.class, () -> transDao.delete(Long.MAX_VALUE));
-    }
-
-    @AfterAll
-    public static void cleanUp() {
-        tearDown();
     }
 
     @AfterEach

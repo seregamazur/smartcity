@@ -1,19 +1,23 @@
 package com.smartcity.dao;
 
-import com.smartcity.domain.Budget;
-import com.smartcity.exceptions.DbOperationException;
-import com.smartcity.exceptions.NotFoundException;
-import com.smartcity.mapper.BudgetMapper;
+import javax.sql.DataSource;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Repository;
 
-import javax.sql.DataSource;
+import com.smartcity.domain.Budget;
+import com.smartcity.exceptions.DbOperationException;
+import com.smartcity.exceptions.NotFoundException;
+import com.smartcity.mapper.BudgetMapper;
 
+@Repository
 public class BudgetDaoImpl implements BudgetDao {
 
     private static final Logger logger = LoggerFactory.getLogger(BudgetDaoImpl.class);
+
     private JdbcTemplate template;
 
     @Autowired
@@ -39,7 +43,7 @@ public class BudgetDaoImpl implements BudgetDao {
 
             try {
                 affected = template.update(Queries.SQL_TRANSACTION_UPDATE,
-                        budget.getValue());
+                    budget.getValue());
             } catch (Exception e) {
                 String err = "Failed updating Budget in DB: " + e.getMessage();
                 logger.error(err);
@@ -57,9 +61,9 @@ public class BudgetDaoImpl implements BudgetDao {
         try {
             logger.warn("No budget entry found in DB; creating a new entry!");
             affected = template.update(Queries.SQL_TRANSACTION_CREATE,
-                    budget.getValue());
+                budget.getValue());
         } catch (
-                Exception e) {
+            Exception e) {
             String err = "Failed inserting Budget into DB: " + e.getMessage();
             logger.error(err);
             throw new DbOperationException(err);
@@ -88,9 +92,13 @@ public class BudgetDaoImpl implements BudgetDao {
     }
 
     class Queries {
+
         static final String SQL_TRANSACTION_CREATE = "INSERT INTO Budget(value) VALUES(?)";
+
         static final String SQL_TRANSACTION_GET = "SELECT * FROM Budget";
+
         static final String SQL_TRANSACTION_UPDATE = "UPDATE Budget SET value = ?";
+
         static final String SQL_TRANSACTION_COUNT = "SELECT count(*) FROM Budget";
     }
 }

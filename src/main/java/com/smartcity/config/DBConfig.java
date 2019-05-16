@@ -1,29 +1,39 @@
 package com.smartcity.config;
 
-import com.mchange.v2.c3p0.ComboPooledDataSource;
+import java.beans.PropertyVetoException;
+
+import javax.sql.DataSource;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
-import javax.sql.DataSource;
+import com.mchange.v2.c3p0.ComboPooledDataSource;
 
 @Configuration
 public class DBConfig {
-    @Value("${db.host}")
-    private String dbUrl;
+
+    @Value("${db.driver}")
+    private String driverClassName;
+
+    @Value("${db.url}")
+    private String url;
+
     @Value("${db.username}")
-    private String dbUsername;
+    private String username;
+
     @Value("${db.password}")
-    private String dbPassword;
+    private String password;
 
     @Bean
-    public DataSource dataSource() {
+    public DataSource dataSource() throws PropertyVetoException {
+
         ComboPooledDataSource dataSource = new ComboPooledDataSource();
 
-        dataSource.setJdbcUrl(dbUrl);
-        dataSource.setUser(dbUsername);
-        dataSource.setPassword(dbPassword);
-
+        dataSource.setDriverClass(driverClassName);
+        dataSource.setJdbcUrl(url);
+        dataSource.setUser(username);
+        dataSource.setPassword(password);
         dataSource.setMinPoolSize(5);
         dataSource.setMaxPoolSize(20);
         dataSource.setAcquireIncrement(5);

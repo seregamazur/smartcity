@@ -1,23 +1,26 @@
 package com.smartcity.dao;
 
+import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+import org.springframework.beans.factory.annotation.Autowired;
+
 import com.smartcity.domain.User;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
 import com.smartcity.utils.EncryptionUtil;
-import org.junit.jupiter.api.*;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class UserDaoImplTest extends BaseTest {
-    private static UserDaoImpl userDao;
-    private User user;
 
-    @BeforeAll
-    public static void beforeAllSetUp() {
-        setup();
-        userDao = new UserDaoImpl(dataSource);
-    }
+    @Autowired
+    private UserDao userDao;
+
+    private User user;
 
     @BeforeEach
     public void beforeEachSetUp() {
@@ -65,7 +68,7 @@ public class UserDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testFindByEmail_successFlow(){
+    public void testFindByEmail_successFlow() {
         User resultUser = userDao.findByEmail(user.getEmail());
 
         // Encrypting user password
@@ -75,7 +78,7 @@ public class UserDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testFindByEmail_incorrectEmail(){
+    public void testFindByEmail_incorrectEmail() {
         assertThrows(NotFoundException.class, () -> userDao.findByEmail("not_existing_email@gmail.com"));
     }
 
@@ -109,7 +112,6 @@ public class UserDaoImplTest extends BaseTest {
         assertThrows(NotFoundException.class, () -> userDao.update(user));
     }
 
-
     @Test
     public void testUpdate_omittedNotNullFieldsExceptId() {
         // Creating empty user item
@@ -133,14 +135,9 @@ public class UserDaoImplTest extends BaseTest {
         assertThrows(NotFoundException.class, () -> userDao.delete(Long.MAX_VALUE));
     }
 
-
     @AfterEach
     public void AfterEachTearDown() {
         clearTables("Users");
     }
 
-    @AfterAll
-    public static void AfterAllTearDown() {
-        tearDown();
-    }
 }
