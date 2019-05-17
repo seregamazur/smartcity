@@ -1,12 +1,10 @@
-package com.smartcity.domain;
-
+package com.smartcity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
-import java.util.Objects;
 
-public class Organization {
+public class OrganizationDto {
     private Long id;
     private String name;
     private String address;
@@ -15,11 +13,11 @@ public class Organization {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 
-    public Organization() {
+    public OrganizationDto() {
 
     }
 
-    public Organization(Long id, String name, String address, LocalDateTime createdDate, LocalDateTime updatedDate) {
+    public OrganizationDto(Long id, String name, String address, LocalDateTime createdDate, LocalDateTime updatedDate) {
         this.id = id;
         this.name = name;
         this.address = address;
@@ -67,31 +65,4 @@ public class Organization {
         this.updatedDate = updatedDate;
     }
 
-    @Override
-    public String toString() {
-        return "Organization{" +
-                "id=" + id +
-                ", name='" + name + '\'' +
-                ", address='" + address + '\'' +
-                ", createdDate=" + createdDate +
-                ", updatedDate=" + updatedDate +
-                '}';
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null || getClass() != o.getClass()) return false;
-        Organization that = (Organization) o;
-        return Objects.equals(id, that.id) &&
-                Objects.equals(name, that.name) &&
-                Objects.equals(address, that.address) &&
-                Objects.equals(createdDate, that.createdDate) &&
-                Objects.equals(updatedDate, that.updatedDate);
-    }
-
-    @Override
-    public int hashCode() {
-        return Objects.hash(id, name, address, createdDate, updatedDate);
-    }
 }

@@ -14,7 +14,7 @@ import java.util.stream.Collectors;
 @Service
 public class TransactionServiceImpl implements TransactionService {
 
-    private TransactionDaoImpl transDao;
+    private TransactionDao transDao;
     private TransactionDtoMapper mapper;
 
     @Autowired
