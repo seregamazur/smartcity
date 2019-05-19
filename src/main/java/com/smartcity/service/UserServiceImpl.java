@@ -1,6 +1,6 @@
 package com.smartcity.service;
 
-import com.smartcity.dao.UserDaoImpl;
+import com.smartcity.dao.UserDao;
 import com.smartcity.domain.User;
 import com.smartcity.dto.UserDto;
 import com.smartcity.mapperDto.UserDtoMapper;
@@ -11,10 +11,10 @@ import org.springframework.stereotype.Service;
 public class UserServiceImpl implements UserService {
 
     private UserDtoMapper userDtoMapper;
-    private UserDaoImpl userDao;
+    private UserDao userDao;
 
     @Autowired
-    public UserServiceImpl(UserDaoImpl userDao, UserDtoMapper userDtoMapper) {
+    public UserServiceImpl(UserDao userDao, UserDtoMapper userDtoMapper) {
         this.userDao = userDao;
         this.userDtoMapper = userDtoMapper;
     }
