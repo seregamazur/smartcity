@@ -9,19 +9,23 @@ import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 
 public class TransactionDto {
+
     @Null(groups = {NewRecord.class})
     @NotNull(groups = {ExistingRecord.class})
     private Long id;
-    //    TODO: Validate this field!
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long taskId;
-    //    TODO: Validate this field!
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long currentBudget;
-    //    TODO: Validate this field!
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long transactionBudget;
-    //    TODO: Validate this field!
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdDate;
-    //    TODO: Validate this field!
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 

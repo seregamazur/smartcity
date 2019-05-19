@@ -1,19 +1,48 @@
 package com.smartcity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class UserDto {
+
+    @Null(groups = {NewRecord.class})
+    @NotNull(groups = {ExistingRecord.class})
     private Long id;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a password")
     private String password;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a name")
     private String name;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a surname")
     private String surname;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide an email")
+    @Email(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a valid email")
     private String email;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please provide a phone number")
+    @Pattern(groups = {NewRecord.class, ExistingRecord.class},
+            regexp = "^\\+(?:[0-9] ?){6,14}[0-9]$")
     private String phoneNumber;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private boolean active;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdDate;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 

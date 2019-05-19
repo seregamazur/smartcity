@@ -1,9 +1,12 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.CommentDto;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.CommentService;
 import com.smartcity.service.CommentServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -26,6 +29,7 @@ public class CommentController {
 
     @PutMapping(value = "/{id}")
     public CommentDto updateComment(
+            @Validated(ExistingRecord.class)
             @PathVariable("id") Long id,
             @RequestBody CommentDto commentDto)  {
         commentDto.setId(id);
@@ -48,7 +52,7 @@ public class CommentController {
     }
 
     @PostMapping("")
-    public CommentDto createComment(@RequestBody CommentDto commentDto) {
+    public CommentDto createComment(@Validated(NewRecord.class) @RequestBody CommentDto commentDto) {
         return commentService.create(commentDto);
     }
 

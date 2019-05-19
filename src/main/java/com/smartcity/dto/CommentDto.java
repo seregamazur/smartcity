@@ -2,17 +2,36 @@ package com.smartcity.dto;
 
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 
+import javax.validation.constraints.NotBlank;
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 
 public class CommentDto {
+
+    @Null(groups = {NewRecord.class})
+    @NotNull(groups = {ExistingRecord.class})
     private Long id;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a description")
     private String description;
+
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdDate;
+
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long userId;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long taskId;
 
     public CommentDto() {
