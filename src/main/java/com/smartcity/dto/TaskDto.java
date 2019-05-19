@@ -1,22 +1,47 @@
 package com.smartcity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
 public class TaskDto {
+    @Null(groups = {NewRecord.class})
+    @NotNull(groups = {ExistingRecord.class})
     private Long id;
+
+    @NotBlank(message = "Please, provide a title")
+    @Pattern(regexp = "[a-zA-Z]", message = "Please, provide a valid title")
     private String title;
+
+    @NotBlank(message = "Please, provide a title")
     private String description;
+
+    @NotNull(message = "Please, provide an accomplishment date")
+    @Future(message = "Accomplishment date should be in the future")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime deadlineDate;
+
+    //    TODO: Validate this field!
     private String taskStatus;
+
+    @NotNull(message = "Please, add a budget")
     private Long budget;
+
+    //    TODO: Validate this field!
     private Long approvedBudget;
+
+    //    TODO: Validate this field!
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdAt;
+
+    //    TODO: Validate this field!
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedAt;
+
+    //    TODO: Validate this field!
     private Long usersOrganizationsId;
 
     public TaskDto(Long id, String title, String description, LocalDateTime deadlineDate, String taskStatus,
