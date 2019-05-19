@@ -1,7 +1,7 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.UserDto;
-import com.smartcity.service.UserServiceImpl;
+import com.smartcity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/users")
 public class UserController {
 
-    private UserServiceImpl userService;
+    private UserService userService;
 
     @Autowired
-    public UserController(UserServiceImpl userService) {
+    public UserController(UserService userService) {
         this.userService = userService;
     }
 
@@ -38,7 +38,7 @@ public class UserController {
     }
 
     @ResponseStatus(HttpStatus.OK)
-    @DeleteMapping(value ="/{id}")
+    @DeleteMapping(value = "/{id}")
     public boolean deleteUser(@PathVariable("id") Long id) {
         return userService.delete(id);
     }
