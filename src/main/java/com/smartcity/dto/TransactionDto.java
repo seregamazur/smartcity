@@ -1,16 +1,27 @@
 package com.smartcity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 
+import javax.validation.constraints.NotNull;
+import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
 
 public class TransactionDto {
+    @Null(groups = {NewRecord.class})
+    @NotNull(groups = {ExistingRecord.class})
     private Long id;
+    //    TODO: Validate this field!
     private Long taskId;
+    //    TODO: Validate this field!
     private Long currentBudget;
+    //    TODO: Validate this field!
     private Long transactionBudget;
+    //    TODO: Validate this field!
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdDate;
+    //    TODO: Validate this field!
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 
