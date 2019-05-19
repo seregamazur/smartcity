@@ -106,7 +106,7 @@ public class TransactionDaoImpl implements TransactionDao {
                     id, e.getMessage());
             throw new DbOperationException("Get transaction exception");
         }
-       return list;
+        return list;
     }
 
     private PreparedStatement createStatement(Transaction transaction, Connection con) throws SQLException {

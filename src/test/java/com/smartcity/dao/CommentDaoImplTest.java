@@ -3,7 +3,6 @@ package com.smartcity.dao;
 import com.smartcity.domain.Comment;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,11 +24,6 @@ public class CommentDaoImplTest extends BaseTest {
 
     @Autowired
     private CommentDao commentDao;
-
-    @AfterAll
-    public static void afterAll() {
-        tearDown();
-    }
 
     @Test
     public void testCreateComment() {
