@@ -41,18 +41,17 @@ public class RoleDaoImplTest extends BaseTest {
 
     @Test
     public void getAllRoles() {
-        Role role1 = roleDao.get(1L);
-        Role role3 = new Role(3L, "Supervisor", LocalDateTime.now(), LocalDateTime.now());
-        roleDao.create(role3);
+        clearTables("Roles");
+        roleDao.create(role);
+        Role role1 = new Role(3L, "Supervisor", LocalDateTime.now(), LocalDateTime.now());
+        roleDao.create(role1);
         List<Role> roles = roleDao.getAll();
 
         assertAll("are fields of element equals",
-                () -> assertEquals(roles.get(0).getId(), role1.getId()),
-                () -> assertEquals(roles.get(1).getId(), role.getId()),
-                () -> assertEquals(roles.get(2).getId(), role3.getId()),
-                () -> assertEquals(roles.get(0).getName(), role1.getName()),
-                () -> assertEquals(roles.get(1).getName(), role.getName()),
-                () -> assertEquals(roles.get(2).getName(), role3.getName())
+                () -> assertEquals(roles.get(0).getId(), role.getId()),
+                () -> assertEquals(roles.get(1).getId(), role1.getId()),
+                () -> assertEquals(roles.get(0).getName(), role.getName()),
+                () -> assertEquals(roles.get(1).getName(), role1.getName())
         );
     }
 
