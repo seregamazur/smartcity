@@ -117,4 +117,20 @@ public class TaskDto {
     public void setUsersOrganizationsId(Long usersOrganizationsId) {
         this.usersOrganizationsId = usersOrganizationsId;
     }
+
+    @Override
+    public String toString() {
+        return "TaskDto{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", description='" + description + '\'' +
+                ", deadlineDate=" + deadlineDate +
+                ", taskStatus='" + taskStatus + '\'' +
+                ", budget=" + budget +
+                ", approvedBudget=" + approvedBudget +
+                ", createdAt=" + createdAt +
+                ", updatedAt=" + updatedAt +
+                ", usersOrganizationsId=" + usersOrganizationsId +
+                '}';
+    }
 }
