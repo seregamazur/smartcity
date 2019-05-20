@@ -18,7 +18,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskDtoMapper taskDtoMapper;
 
     @Autowired
-    public TaskServiceImpl(TaskDaoImpl taskDao, TaskDtoMapper taskDtoMapper) {
+    public TaskServiceImpl(TaskDao taskDao, TaskDtoMapper taskDtoMapper) {
         this.taskDao = taskDao;
         this.taskDtoMapper = taskDtoMapper;
     }
