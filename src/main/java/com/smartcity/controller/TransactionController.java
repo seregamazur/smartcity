@@ -2,7 +2,6 @@ package com.smartcity.controller;
 
 import com.smartcity.dto.TransactionDto;
 import com.smartcity.service.TransactionService;
-import com.smartcity.service.TransactionServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ public class TransactionController {
     private TransactionService transService;
 
     @Autowired
-    public TransactionController(TransactionServiceImpl transService) {
+    public TransactionController(TransactionService transService) {
         this.transService = transService;
     }
 
