@@ -11,13 +11,14 @@ import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
 
-import com.smartcity.config.ApplicationConfig;
+import com.smartcity.config.ProfileConfig;
+
 import org.springframework.test.context.web.WebAppConfiguration;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
-@ContextConfiguration(classes = { ApplicationConfig.class })
+@ContextConfiguration(classes = { ProfileConfig.class })
 public class BaseTest {
 
     @Autowired
