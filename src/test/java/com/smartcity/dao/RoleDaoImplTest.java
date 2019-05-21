@@ -1,6 +1,7 @@
 package com.smartcity.dao;
 
 import com.smartcity.domain.Role;
+import com.smartcity.domain.User;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
 import org.junit.jupiter.api.AfterEach;
@@ -9,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
@@ -59,6 +61,40 @@ public class RoleDaoImplTest extends BaseTest {
     public void getRole_unexistingRole() {
         role.setId(Long.MAX_VALUE - 2);
         assertThrows(NotFoundException.class, () -> roleDao.get(role.getId()));
+    }
+
+    @Test
+    public void getRolesByUserId() {
+        clearTables("Users_roles");
+        clearTables("Users");
+        clearTables("Roles");
+
+        roleDao.create(role);
+        Role role1 = new Role(2L, "Admin", LocalDateTime.now(), LocalDateTime.now());
+        roleDao.create(role1);
+
+        User user = new User();
+        user.setEmail("example@gmail.com");
+        user.setPassword("12345");
+        user.setSurname("Johnson");
+        user.setName("John");
+        user.setPhoneNumber("0626552521415");
+        new UserDaoImpl(dataSource).create(user);
+
+        template.update("insert into Users_roles(role_id,user_id) values (1," + user.getId() + ");");
+        template.update("insert into Users_roles(role_id,user_id) values (2," + user.getId() + ");");
+        List<Role> roles = new ArrayList<>();
+        roles.add(role);
+        roles.add(role1);
+        List<Role> rolesFromDB = roleDao.getRolesByUserId(user.getId());
+        //assertEquals(roles,roleDao.getRolesByUserId(1L));
+
+        assertAll("equals roles",
+                () -> assertEquals(roles.get(0).getId(), rolesFromDB.get(0).getId()),
+                () -> assertEquals(roles.get(0).getName(), rolesFromDB.get(0).getName()),
+                () -> assertEquals(roles.get(1).getId(), rolesFromDB.get(1).getId()),
+                () -> assertEquals(roles.get(1).getName(), rolesFromDB.get(1).getName())
+        );
     }
 
     @Test

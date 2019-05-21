@@ -67,6 +67,17 @@ public class RoleDaoImpl implements RoleDao {
         }
     }
 
+
+    public List<Role> getRolesByUserId(Long id){
+        try {
+            return this.jdbcTemplate.query(Queries.SQL_GET_ROLES_BY_USER_ID, RoleMapper.getInstance(), id);
+        }
+        catch (Exception e){
+            logger.error("Can't get Roles by User_id = {}. Error: ",id, e);
+            throw new DbOperationException("Can't get roles by Users_id = id "+id);
+        }
+    }
+
     public List<Role> getAll() {
         try {
             return this.jdbcTemplate.query(Queries.SQL_ROLE_GET_ALL, RoleMapper.getInstance());
@@ -101,6 +112,8 @@ public class RoleDaoImpl implements RoleDao {
         }
     }
 
+
+
     public boolean delete(Long id) {
 
         try {
@@ -124,6 +137,8 @@ public class RoleDaoImpl implements RoleDao {
         return notFoundException;
     }
 
+
+
     class Queries {
 
         static final String SQL_ROLE_DELETE = "delete from    Roles where id = ?";
@@ -135,5 +150,7 @@ public class RoleDaoImpl implements RoleDao {
         static final String SQL_ROLE_GET_BY_ID = "select * from Roles where id = ?";
 
         static final String SQL_ROLE_GET_ALL = "select * from Roles";
+
+        static final String SQL_GET_ROLES_BY_USER_ID = "SELECT * FROM Roles JOIN Users_roles ON Roles.id = Users_roles.role_id WHERE Users_roles.user_id = ?";
     }
 }
