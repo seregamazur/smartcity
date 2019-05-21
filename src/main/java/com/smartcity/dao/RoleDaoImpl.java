@@ -11,7 +11,6 @@ import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
 import org.springframework.stereotype.Repository;
-
 import javax.sql.DataSource;
 import java.sql.PreparedStatement;
 import java.sql.Statement;
@@ -66,7 +65,6 @@ public class RoleDaoImpl implements RoleDao {
             throw new DbOperationException("Can't get role with id = " + id);
         }
     }
-
 
     public List<Role> getRolesByUserId(Long id){
         try {
@@ -152,5 +150,6 @@ public class RoleDaoImpl implements RoleDao {
         static final String SQL_ROLE_GET_ALL = "select * from Roles";
 
         static final String SQL_GET_ROLES_BY_USER_ID = "SELECT * FROM Roles JOIN Users_roles ON Roles.id = Users_roles.role_id WHERE Users_roles.user_id = ?";
+
     }
 }
