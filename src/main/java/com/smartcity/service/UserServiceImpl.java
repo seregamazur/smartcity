@@ -45,4 +45,9 @@ public class UserServiceImpl implements UserService {
     public boolean delete(Long id) {
         return userDao.delete(id);
     }
+
+    @Override
+    public boolean updatePassword(Long userId, String newPassword) {
+        return userDao.updatePassword(userId, newPassword);
+    }
 }

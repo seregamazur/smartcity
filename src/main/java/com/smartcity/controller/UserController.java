@@ -5,6 +5,8 @@ import com.smartcity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.User;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -42,4 +44,15 @@ public class UserController {
     public boolean deleteUser(@PathVariable("id") Long id) {
         return userService.delete(id);
     }
+
+    @ResponseStatus(HttpStatus.OK)
+    @PostMapping(value = "/reset-password")
+    public boolean updatePassword(@RequestBody String newPassword,
+                                  @AuthenticationPrincipal User user) {
+
+        Long userId = userService.findByEmail(user.getUsername()).getId();
+
+        return userService.updatePassword(userId, newPassword);
+    }
+
 }

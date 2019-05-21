@@ -13,4 +13,6 @@ public interface UserService {
     UserDto update(UserDto user);
 
     boolean delete(Long id);
+
+    boolean updatePassword(Long userId, String newPassword);
 }
