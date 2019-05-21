@@ -2,7 +2,6 @@ package com.smartcity.controller;
 
 import com.smartcity.dto.TaskDto;
 import com.smartcity.service.TaskService;
-import com.smartcity.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.*;
@@ -16,7 +15,7 @@ public class TaskController {
     private TaskService taskService;
 
     @Autowired
-    public TaskController(TaskServiceImpl taskService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
