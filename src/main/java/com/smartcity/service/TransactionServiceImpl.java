@@ -1,7 +1,6 @@
 package com.smartcity.service;
 
 import com.smartcity.dao.TransactionDao;
-import com.smartcity.dao.TransactionDaoImpl;
 import com.smartcity.dto.TransactionDto;
 import com.smartcity.mapperDto.TransactionDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +16,7 @@ public class TransactionServiceImpl implements TransactionService {
     private TransactionDtoMapper mapper;
 
     @Autowired
-    public TransactionServiceImpl(TransactionDaoImpl transDao, TransactionDtoMapper mapper) {
+    public TransactionServiceImpl(TransactionDao transDao, TransactionDtoMapper mapper) {
         this.transDao = transDao;
         this.mapper = mapper;
     }

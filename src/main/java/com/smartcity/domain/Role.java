@@ -2,14 +2,15 @@ package com.smartcity.domain;
 
 import java.time.LocalDateTime;
 import java.util.Objects;
+import org.springframework.security.core.GrantedAuthority;
 
-public class Role {
+public class Role implements GrantedAuthority {
     private Long id;
     private String name;
     private LocalDateTime createdDate;
     private LocalDateTime updatedDate;
 
-    public Role() {
+    public Role(){
     }
 
     public Role(Long id, String name, LocalDateTime updatedDate, LocalDateTime createdDate) {
@@ -75,5 +76,11 @@ public class Role {
                 ", createdDate=" + createdDate +
                 ", updatedDate=" + updatedDate +
                 '}';
+    }
+
+
+    @Override
+    public String getAuthority() {
+        return name;
     }
 }
