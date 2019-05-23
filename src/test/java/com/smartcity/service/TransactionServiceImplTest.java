@@ -18,17 +18,17 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class TransactionServiceImplTest extends BaseTest {
 
-    private TransactionDto transaction = new TransactionDto(2L, 1L,
+    private final TransactionDto transaction = new TransactionDto(2L, 1L,
             5000L, 3000L,
             LocalDateTime.now(), LocalDateTime.now());
 
     @Autowired
-    TransactionService service;
+    private TransactionService service;
 
     @Test
     public void testCreateTransactionDto() {
         assertThat(service.create(transaction))
-                .isEqualToIgnoringGivenFields(transaction,"id",
+                .isEqualToIgnoringGivenFields(transaction, "id",
                         "createdDate", "updatedDate");
     }
 
@@ -46,7 +46,7 @@ class TransactionServiceImplTest extends BaseTest {
 
     @Test
     public void testFindTransactionDto() {
-       TransactionDto dto =  service.create(transaction);
+        TransactionDto dto = service.create(transaction);
         assertThat(transaction).
                 isEqualToIgnoringGivenFields(service.findById(dto.getId()),
                         "id", "createdDate", "updatedDate");
@@ -62,7 +62,7 @@ class TransactionServiceImplTest extends BaseTest {
     public void testFindTransactionDtoByTaskId() {
         service.create(transaction);
         assertThat(transaction).isEqualToIgnoringGivenFields(
-                service.findByTaskId(transaction.getTaskId()).get(0),"id",
+                service.findByTaskId(transaction.getTaskId()).get(0), "id",
                 "createdDate", "updatedDate");
     }
 

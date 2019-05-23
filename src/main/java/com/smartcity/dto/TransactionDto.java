@@ -3,6 +3,7 @@ package com.smartcity.dto;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class TransactionDto {
     private Long id;
@@ -75,5 +76,21 @@ public class TransactionDto {
         this.updatedDate = updatedDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TransactionDto that = (TransactionDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(taskId, that.taskId) &&
+                Objects.equals(currentBudget, that.currentBudget) &&
+                Objects.equals(transactionBudget, that.transactionBudget) &&
+                Objects.equals(createdDate, that.createdDate) &&
+                Objects.equals(updatedDate, that.updatedDate);
+    }
 
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, taskId, currentBudget, transactionBudget, createdDate, updatedDate);
+    }
 }
