@@ -10,7 +10,6 @@ public class UserDtoMapper {
     public UserDto convertUserIntoUserDto(User user) {
         UserDto userDto = new UserDto();
         userDto.setId(user.getId());
-        user.setPassword(null);
         userDto.setName(user.getName());
         userDto.setSurname(user.getSurname());
         userDto.setEmail(user.getEmail());
