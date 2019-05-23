@@ -1,22 +1,54 @@
 package com.smartcity.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.dto.constraint.LessThan;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 
+import javax.validation.constraints.*;
 import java.time.LocalDateTime;
 
+@LessThan(groups = {NewRecord.class, ExistingRecord.class},
+        message = "Approved budget should be less than budget")
 public class TaskDto {
+
+    @Null(groups = {NewRecord.class})
+    @NotNull(groups = {ExistingRecord.class})
     private Long id;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a title")
     private String title;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide a description")
     private String description;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, provide an accomplishment date")
+    @Future(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Accomplishment date should be in the future")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime deadlineDate;
+
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class})
     private String taskStatus;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "Please, add a budget")
+    @Min(groups = {NewRecord.class, ExistingRecord.class},
+            value = 0)
     private Long budget;
+
     private Long approvedBudget;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdAt;
+
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedAt;
+
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
     private Long usersOrganizationsId;
 
     public TaskDto(Long id, String title, String description, LocalDateTime deadlineDate, String taskStatus,

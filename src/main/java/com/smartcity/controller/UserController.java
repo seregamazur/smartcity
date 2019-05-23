@@ -1,12 +1,18 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.UserDto;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.service.UserServiceImpl;
 import com.smartcity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
+
+import org.springframework.validation.annotation.Validated;
+
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.userdetails.User;
+
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -34,7 +40,7 @@ public class UserController {
 
     @ResponseStatus(HttpStatus.OK)
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.APPLICATION_JSON_VALUE)
-    public UserDto updateUser(@PathVariable("id") Long id, @RequestBody UserDto userDto) {
+    public UserDto updateUser(@Validated(ExistingRecord.class) @PathVariable("id") Long id, @RequestBody UserDto userDto) {
         userDto.setId(id);
         return userService.update(userDto);
     }

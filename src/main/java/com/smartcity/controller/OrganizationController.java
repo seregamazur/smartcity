@@ -1,10 +1,13 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.OrganizationDto;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.OrganizationService;
 import com.smartcity.service.OrganizationServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -20,7 +23,7 @@ public class OrganizationController {
     }
 
     @PostMapping("")
-    public OrganizationDto create(@RequestBody OrganizationDto organizationDto) {
+    public OrganizationDto create(@Validated(NewRecord.class) @RequestBody OrganizationDto organizationDto) {
         return organizationService.create(organizationDto);
     }
 
@@ -30,7 +33,10 @@ public class OrganizationController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public OrganizationDto update(@PathVariable("id") Long id, @RequestBody OrganizationDto organizationDto) {
+    public OrganizationDto update(
+            @Validated(ExistingRecord.class)
+            @PathVariable("id") Long id,
+            @RequestBody OrganizationDto organizationDto) {
         organizationDto.setId(id);
         return organizationService.update(organizationDto);
     }

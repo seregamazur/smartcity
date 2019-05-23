@@ -1,10 +1,13 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.TaskDto;
+import com.smartcity.dto.transfer.ExistingRecord;
+import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.TaskService;
 import com.smartcity.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -21,7 +24,7 @@ public class TaskController {
     }
 
     @PostMapping
-    public TaskDto createTask(@RequestBody TaskDto taskDto) {
+    public TaskDto createTask(@Validated(NewRecord.class) @RequestBody TaskDto taskDto) {
         return taskService.create(taskDto);
     }
 
@@ -32,6 +35,7 @@ public class TaskController {
 
     @PutMapping(value = "/{id}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public TaskDto updateTask(
+            @Validated(ExistingRecord.class)
             @PathVariable("id") Long id,
             @RequestBody TaskDto taskDto) {
         taskDto.setId(id);
