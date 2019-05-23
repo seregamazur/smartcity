@@ -4,6 +4,7 @@ import com.smartcity.domain.Transaction;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
 import org.junit.jupiter.api.AfterEach;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -17,18 +18,22 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class TransactionDaoImplTest extends BaseTest {
 
-    private Transaction transaction = new Transaction(2L, 1L,
-            5000L, 3000L,
-            LocalDateTime.now(), LocalDateTime.now());
+    private Transaction transaction;
+
+    @BeforeEach
+    public  void init() {
+        transaction =  new Transaction(2L, 1L,
+                5000L, 3000L,
+                LocalDateTime.now(), LocalDateTime.now());
+    }
 
     @Autowired
     private TransactionDao transDao;
 
     @Test
     public void testCreateTransaction() {
-        assertThat(transDao.create(transaction))
-                .isEqualToIgnoringGivenFields(transaction,
-                        "createdDate", "updatedDate");
+        assertThat(transDao.create(transaction)).isEqualToIgnoringGivenFields(transaction,
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -80,7 +85,7 @@ public class TransactionDaoImplTest extends BaseTest {
 
     @Test
     public void testFindTransactionByTaskId_emptyList() {
-        assertThat(new ArrayList()).isEqualTo(transDao.findByTaskId(Long.MAX_VALUE));
+        assertThat(transDao.findByTaskId(Long.MAX_VALUE)).isEmpty();
     }
 
     @Test

@@ -1,8 +1,12 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.UserDto;
+
 import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.UserServiceImpl;
+
+import com.smartcity.service.UserService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -12,9 +16,12 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/registration")
 public class RegistrationController {
+    private UserService userService;
 
     @Autowired
-    private UserServiceImpl userService;
+    public RegistrationController(UserService userService) {
+        this.userService = userService;
+    }
 
     @ResponseStatus(HttpStatus.CREATED)
     @PostMapping(

@@ -117,7 +117,6 @@ public class UserDaoImpl implements UserDao {
             rowsAffected = jdbcTemplate.update(
                     Queries.SQL_UPDATE_USER,
                     user.getEmail(),
-                    EncryptionUtil.encryptPassword(user.getPassword()),
                     user.getSurname(),
                     user.getName(),
                     user.getPhoneNumber(),
@@ -130,7 +129,7 @@ public class UserDaoImpl implements UserDao {
         }
         catch (Exception e) {
             logger.error("Update user (id = {}) exception. Message: {}", user.getId(), e.getMessage());
-            throw new DbOperationException("Update user exceptions");
+            throw new DbOperationException("Update user exception");
         }
 
         if (rowsAffected < 1) {
@@ -139,6 +138,7 @@ public class UserDaoImpl implements UserDao {
 
         return user;
     }
+
 
     @Override
     public boolean delete(Long id) {
@@ -149,7 +149,7 @@ public class UserDaoImpl implements UserDao {
         }
         catch (Exception e) {
             logger.error("Delete user (id = {}) exception. Message: {}", id, e.getMessage());
-            throw new DbOperationException("Delete user exceptions");
+            throw new DbOperationException("Delete user exception");
         }
 
         if (rowsAffected < 1) {
@@ -160,11 +160,31 @@ public class UserDaoImpl implements UserDao {
         }
     }
 
+    @Override
+    public boolean updatePassword(Long userId, String newPassword) {
+        int rowsAffected;
+
+        try {
+            String encryptedPassword = EncryptionUtil.encryptPassword(newPassword);
+            rowsAffected = jdbcTemplate.update(Queries.SQL_UPDATE_USER_PASSWORD, encryptedPassword, userId);
+        }
+        catch (Exception e) {
+            logger.error("Update user password (id = {}) exception. Message: {}", userId, e.getMessage());
+            throw new DbOperationException("Update user password exception");
+        }
+        if (rowsAffected < 1) {
+            throw getAndLogUserNotFoundException(userId);
+        }
+        else {
+            return true;
+        }
+    }
+
     private NotFoundException getAndLogUserNotFoundException(Long id) {
         NotFoundException notFoundException = new NotFoundException("User not found");
         logger.error("Runtime exception. User not found (id = {}). Message: {}",
                 id, notFoundException.getMessage());
-        
+
         return notFoundException;
     }
 
@@ -173,12 +193,14 @@ public class UserDaoImpl implements UserDao {
         static final String SQL_SET_ACTIVE_STATUS_USER = "UPDATE Users SET active = ? WHERE id = ?;";
 
         static final String SQL_UPDATE_USER = "UPDATE Users SET " +
-                "email = ?, password = ?, surname = ?," +
+                "email = ?, surname = ?," +
                 " name = ?, phone_number = ?, active = ?, updated_date = ? WHERE id = ?;";
 
         static final String SQL_SELECT_USER_BY_ID = "SELECT * FROM Users WHERE id = ?";
 
         static final String SQL_SELECT_USER_BY_EMAIL = "SELECT * FROM Users WHERE email = ?";
+
+        static final String SQL_UPDATE_USER_PASSWORD = "UPDATE Users SET password = ? WHERE id = ?";
 
         static final String SQL_CREATE_USER = "" +
                 "INSERT INTO Users(email, password, surname," +
