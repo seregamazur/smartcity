@@ -7,6 +7,7 @@ import com.smartcity.dto.transfer.NewRecord;
 
 import javax.validation.constraints.*;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 @LessThan(groups = {NewRecord.class, ExistingRecord.class},
         message = "Approved budget should be less than budget")
@@ -151,18 +152,41 @@ public class TaskDto {
     }
 
     @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        TaskDto taskDto = (TaskDto) o;
+        return Objects.equals(id, taskDto.id) &&
+                Objects.equals(title, taskDto.title) &&
+                Objects.equals(description, taskDto.description) &&
+                Objects.equals(deadlineDate, taskDto.deadlineDate) &&
+                Objects.equals(taskStatus, taskDto.taskStatus) &&
+                Objects.equals(budget, taskDto.budget) &&
+                Objects.equals(approvedBudget, taskDto.approvedBudget) &&
+                Objects.equals(createdAt, taskDto.createdAt) &&
+                Objects.equals(updatedAt, taskDto.updatedAt) &&
+                Objects.equals(usersOrganizationsId, taskDto.usersOrganizationsId);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, title, description, deadlineDate, taskStatus, budget,
+                approvedBudget, createdAt, updatedAt, usersOrganizationsId);
+    }
+
+    @Override
     public String toString() {
-        return "TaskDto{" +
-                "id=" + id +
-                ", title='" + title + '\'' +
-                ", description='" + description + '\'' +
-                ", deadlineDate=" + deadlineDate +
-                ", taskStatus='" + taskStatus + '\'' +
-                ", budget=" + budget +
-                ", approvedBudget=" + approvedBudget +
-                ", createdAt=" + createdAt +
-                ", updatedAt=" + updatedAt +
-                ", usersOrganizationsId=" + usersOrganizationsId +
+        return "{" +
+                "\"id\":" + id +
+                ",\"title\":\"" + title + '\"' +
+                ",\"description\":\"" + description + '\"' +
+                ",\"deadlineDate\":\"" + deadlineDate + '\"' +
+                ",\"taskStatus\":\"" + taskStatus + '\"' +
+                ",\"budget\":" + budget +
+                ",\"approvedBudget\":" + approvedBudget +
+                ",\"createdAt\":\"" + createdAt + '\"' +
+                ",\"updatedAt\":\"" + updatedAt + '\"' +
+                ",\"usersOrganizationsId\":" + usersOrganizationsId +
                 '}';
     }
 }

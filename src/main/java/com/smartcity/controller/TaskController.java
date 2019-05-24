@@ -4,7 +4,6 @@ import com.smartcity.dto.TaskDto;
 import com.smartcity.dto.transfer.ExistingRecord;
 import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.TaskService;
-import com.smartcity.service.TaskServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.validation.annotation.Validated;
@@ -19,7 +18,7 @@ public class TaskController {
     private TaskService taskService;
 
     @Autowired
-    public TaskController(TaskServiceImpl taskService) {
+    public TaskController(TaskService taskService) {
         this.taskService = taskService;
     }
 
