@@ -1,8 +1,11 @@
 package com.smartcity.service;
 
 import com.smartcity.dto.UserDto;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.stereotype.Component;
 
-public interface UserService {
+@Component
+public interface UserService extends UserDetailsService {
 
     UserDto create(UserDto user);
 

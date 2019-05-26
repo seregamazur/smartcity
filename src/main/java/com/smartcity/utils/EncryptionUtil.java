@@ -2,16 +2,21 @@ package com.smartcity.utils;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.security.crypto.password.PasswordEncoder;
 
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 
-public class EncryptionUtil {
+public class EncryptionUtil implements PasswordEncoder {
 
     private static Logger logger = LoggerFactory.getLogger(EncryptionUtil.class);
 
-    public static String encryptPassword(String plainTextPassword) {
+    public EncryptionUtil() {
+    }
 
+    @Override
+    public String encode(CharSequence sequence) {
+        String plainTextPassword = (String) sequence;
         if (plainTextPassword == null) {
             return null;
         }
@@ -23,8 +28,7 @@ public class EncryptionUtil {
 
         try {
             md = MessageDigest.getInstance(algorithm);
-        }
-        catch (NoSuchAlgorithmException e) {
+        } catch (NoSuchAlgorithmException e) {
             logger.error("Password encrypt exception. Message: {}", e.getMessage());
             return null;
         }
@@ -41,7 +45,16 @@ public class EncryptionUtil {
 
             encryptedPassword.append(Long.toString(encodedPassword[i] & 0xff, 16));
         }
-
         return encryptedPassword.toString();
+    }
+
+    @Override
+    public boolean matches(CharSequence existingPassword, String dbPassword) {
+        if (dbPassword != null && dbPassword.length() != 0) {
+            return encode(existingPassword).equals(dbPassword);
+        } else {
+            logger.warn("Empty encoded password");
+            return false;
+        }
     }
 }

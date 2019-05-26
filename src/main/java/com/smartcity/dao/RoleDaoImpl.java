@@ -149,7 +149,7 @@ public class RoleDaoImpl implements RoleDao {
 
         static final String SQL_ROLE_GET_ALL = "select * from Roles";
 
-        static final String SQL_GET_ROLES_BY_USER_ID = "SELECT * FROM Roles JOIN Users_roles ON Roles.id = Users_roles.role_id WHERE Users_roles.user_id = ?";
+        static final String SQL_GET_ROLES_BY_USER_ID = "SELECT Roles.id, name, Roles.created_date, Roles.updated_date FROM Roles JOIN Users_roles ON Roles.id = Users_roles.role_id WHERE Users_roles.user_id = ?";
 
     }
 }

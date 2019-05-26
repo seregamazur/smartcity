@@ -1,11 +1,21 @@
 package com.smartcity.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.smartcity.config.ApplicationContextHolder;
+import com.smartcity.dao.RoleDaoImpl;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDateTime;
+import java.util.Collection;
 import java.util.Objects;
 
-public class User {
+@Component
+public class User implements UserDetails {
+
+    private RoleDaoImpl roleDao = ApplicationContextHolder.getContext().getBean(RoleDaoImpl.class);
+
     private Long id;
     private String password;
     private String name;
@@ -38,10 +48,6 @@ public class User {
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public String getPassword() {
-        return password;
     }
 
     public void setPassword(String password) {
@@ -102,6 +108,41 @@ public class User {
 
     public void setActive(boolean active) {
         this.active = active;
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return roleDao.getRolesByUserId(getId());
+    }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return getEmail();
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return isActive();
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return isActive();
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return isActive();
     }
 
     @Override
