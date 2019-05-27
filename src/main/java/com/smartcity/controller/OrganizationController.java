@@ -22,7 +22,7 @@ public class OrganizationController {
         this.organizationService = organizationService;
     }
 
-    @ResponseStatus(HttpStatus.OK)
+    @ResponseStatus(HttpStatus.CREATED)
     @PostMapping("")
     public OrganizationDto create(@Validated(NewRecord.class) @RequestBody OrganizationDto organizationDto) {
         return organizationService.create(organizationDto);
