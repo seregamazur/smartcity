@@ -1,35 +1,31 @@
 package com.smartcity.dao;
 
-import java.time.LocalDateTime;
-
+import com.smartcity.domain.Organization;
+import com.smartcity.exceptions.DbOperationException;
+import com.smartcity.exceptions.NotFoundException;
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import com.smartcity.domain.Organization;
-import com.smartcity.exceptions.DbOperationException;
-import com.smartcity.exceptions.NotFoundException;
+import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertNotEquals;
-import static org.junit.jupiter.api.Assertions.assertThrows;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 class OrganizationDaoImplTest extends BaseTest {
 
     @Autowired
-    private OrganizationDaoImpl organizationDao;
+    private OrganizationDao organizationDao;
 
     private Organization organization = new Organization(1L,
-        "komunalna",
-        "saharova 13",
-        LocalDateTime.now(), LocalDateTime.now());
+            "komunalna",
+            "saharova 13",
+            LocalDateTime.now(), LocalDateTime.now());
 
     @Test
     public void testCreateOrganization() {
-        organizationDao.create(organization);
         assertThat(organizationDao.create(organization)).isEqualToIgnoringGivenFields(organization,
-            "createdDate", "updatedDate");
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -49,7 +45,7 @@ class OrganizationDaoImplTest extends BaseTest {
     public void testGetOrganization() {
         organizationDao.create(organization);
         assertThat(organizationDao.get(organization.getId())).isEqualToIgnoringGivenFields(organization,
-            "createdDate", "updatedDate");
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -72,7 +68,7 @@ class OrganizationDaoImplTest extends BaseTest {
 
         // Checking if both organization are equal
         assertThat(organizationDao.get(updatedOrganization.getId())).isEqualToIgnoringGivenFields(updatedOrganization,
-            "createdDate", "updatedDate");
+                "createdDate", "updatedDate");
     }
 
     @Test
@@ -98,6 +94,15 @@ class OrganizationDaoImplTest extends BaseTest {
     @Test
     public void testDeleteOrganization_invalidId() {
         assertThrows(NotFoundException.class, () -> organizationDao.delete(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testGetAll() {
+        organizationDao.create(organization);
+
+        assertThat(organizationDao.getAll().get(0)).isEqualToIgnoringGivenFields(organization,
+                "createdDate", "updatedDate");
+
     }
 
     @AfterEach
