@@ -8,6 +8,7 @@ import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Null;
 import java.time.LocalDateTime;
+import java.util.Objects;
 
 public class OrganizationDto {
 
@@ -83,4 +84,20 @@ public class OrganizationDto {
         this.updatedDate = updatedDate;
     }
 
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        OrganizationDto that = (OrganizationDto) o;
+        return Objects.equals(id, that.id) &&
+                Objects.equals(name, that.name) &&
+                Objects.equals(address, that.address) &&
+                Objects.equals(createdDate, that.createdDate) &&
+                Objects.equals(updatedDate, that.updatedDate);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id, name, address, createdDate, updatedDate);
+    }
 }

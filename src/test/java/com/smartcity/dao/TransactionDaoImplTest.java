@@ -21,8 +21,8 @@ public class TransactionDaoImplTest extends BaseTest {
     private Transaction transaction;
 
     @BeforeEach
-    public  void init() {
-        transaction =  new Transaction(2L, 1L,
+    public void init() {
+        transaction = new Transaction(2L, 1L,
                 5000L, 3000L,
                 LocalDateTime.now(), LocalDateTime.now());
     }
@@ -63,7 +63,7 @@ public class TransactionDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testFindTransactionByTaskId() {
+    public void testFindTransactionsByTaskId() {
         transDao.create(transaction);
         assertThat(transaction).isEqualToIgnoringGivenFields(
                 transDao.findByTaskId(transaction.getTaskId()).get(0),
@@ -71,7 +71,7 @@ public class TransactionDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testFindTransactionByTaskId_amountOfTransactions() {
+    public void testFindTransactionsByTaskId_amountOfTransactions() {
         List<Transaction> list = new ArrayList<>();
         for (int i = 1; i < 4; i++) {
             transaction.setId((long) i);
@@ -84,7 +84,7 @@ public class TransactionDaoImplTest extends BaseTest {
     }
 
     @Test
-    public void testFindTransactionByTaskId_emptyList() {
+    public void testFindTransactionsByTaskId_emptyList() {
         assertThat(transDao.findByTaskId(Long.MAX_VALUE)).isEmpty();
     }
 

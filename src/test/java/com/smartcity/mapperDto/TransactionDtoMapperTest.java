@@ -1,37 +1,35 @@
 package com.smartcity.mapperDto;
 
-import com.smartcity.config.ProfileConfig;
-import com.smartcity.dao.BaseTest;
 import com.smartcity.domain.Transaction;
+import com.smartcity.dto.TransactionDto;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 
 import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.doReturn;
 
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@WebAppConfiguration
-@ContextConfiguration(classes = {ProfileConfig.class})
-class TransactionDtoMapperTest extends BaseTest {
+@ExtendWith(MockitoExtension.class)
+class TransactionDtoMapperTest {
 
     private Transaction transaction;
+    private TransactionDto transactionDto;
 
-    @Autowired
-    private TransactionDtoMapper mapper;
+    private TransactionDtoMapper mapper = new TransactionDtoMapper();
 
     @BeforeEach
     public void init() {
         transaction = new Transaction(1L, 1L, 30000L, 2000L,
                 LocalDateTime.now(), LocalDateTime.now());
+        transactionDto = new TransactionDto(transaction.getId(), transaction.getTaskId(),
+                transaction.getCurrentBudget(), transaction.getTransactionBudget(),
+                transaction.getCreatedDate(), transaction.getUpdatedDate());
     }
 
     @Test
@@ -41,7 +39,7 @@ class TransactionDtoMapperTest extends BaseTest {
 
     @Test
     public void testConvertDtoToDao() {
-        assertThat(mapper.transactionToTransactionDto(transaction)).isEqualToIgnoringGivenFields(transaction);
+        assertThat(mapper.transactionDtoToTransaction(transactionDto)).isEqualToIgnoringGivenFields(transaction);
     }
 
 }

@@ -1,7 +1,6 @@
 package com.smartcity.service;
 
 import com.smartcity.dao.OrganizationDao;
-import com.smartcity.dao.OrganizationDaoImpl;
 import com.smartcity.domain.Organization;
 import com.smartcity.dto.OrganizationDto;
 import com.smartcity.mapperDto.OrganizationDtoMapper;
@@ -18,7 +17,7 @@ public class OrganizationServiceImpl implements OrganizationService {
     private OrganizationDtoMapper organizationDtoMapper;
 
     @Autowired
-    public OrganizationServiceImpl(OrganizationDaoImpl organizationDao, OrganizationDtoMapper organizationDtoMapper) {
+    public OrganizationServiceImpl(OrganizationDao organizationDao, OrganizationDtoMapper organizationDtoMapper) {
         this.organizationDao = organizationDao;
         this.organizationDtoMapper = organizationDtoMapper;
     }

@@ -1,122 +1,91 @@
 package com.smartcity.service;
 
-import com.smartcity.dao.BaseTest;
+import com.smartcity.dao.TransactionDao;
+import com.smartcity.domain.Transaction;
 import com.smartcity.dto.TransactionDto;
-import com.smartcity.exceptions.DbOperationException;
-import com.smartcity.exceptions.NotFoundException;
-import org.junit.jupiter.api.AfterEach;
+import com.smartcity.mapperDto.TransactionDtoMapper;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
+import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
+import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 
 import java.time.LocalDateTime;
-import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.assertj.core.api.Assertions.assertThat;
-import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.doReturn;
 
-class TransactionServiceImplTest extends BaseTest {
+@ExtendWith(MockitoExtension.class)
+class TransactionServiceImplTest {
 
-    private final TransactionDto transaction = new TransactionDto(2L, 1L,
+    private final TransactionDto transactionDto = new TransactionDto(2L, 1L,
             5000L, 3000L,
             LocalDateTime.now(), LocalDateTime.now());
 
-    @Autowired
-    private TransactionService service;
+    private TransactionDtoMapper transDtoMapper = new TransactionDtoMapper();
+
+    @Mock
+    private TransactionDao transDao;
+    @InjectMocks
+    private TransactionServiceImpl transService;
+
+    private Transaction transaction;
+
+    @BeforeEach
+    public void init() {
+        MockitoAnnotations.initMocks(this);
+        transService = new TransactionServiceImpl(transDao, transDtoMapper);
+        transaction = transDtoMapper.transactionDtoToTransaction(transactionDto);
+    }
 
     @Test
     public void testCreateTransactionDto() {
-        assertThat(service.create(transaction))
-                .isEqualToIgnoringGivenFields(transaction, "id",
+        doReturn(transaction).when(transDao).create(transaction);
+        assertThat(transService.create(transactionDto))
+                .isEqualToIgnoringGivenFields(transDtoMapper.transactionToTransactionDto(transaction), "id",
                         "createdDate", "updatedDate");
-    }
-
-    @Test
-    public void testCreateTransactionDto_invalidTaskId() {
-        transaction.setTaskId(Long.MAX_VALUE);
-        assertThrows(DbOperationException.class, () -> service.create(transaction));
-    }
-
-    @Test
-    public void testCreateTransactionDto_missingTaskId() {
-        transaction.setTaskId(null);
-        assertThrows(DbOperationException.class, () -> service.create(transaction));
     }
 
     @Test
     public void testFindTransactionDto() {
-        TransactionDto dto = service.create(transaction);
-        assertThat(transaction).
-                isEqualToIgnoringGivenFields(service.findById(dto.getId()),
-                        "id", "createdDate", "updatedDate");
-    }
-
-    @Test
-    public void testFindTransactionDto_invalidId() {
-        assertThrows(NotFoundException.class, () -> service.findById(null));
-        assertThrows(NotFoundException.class, () -> service.findById(Long.MAX_VALUE));
-    }
-
-    @Test
-    public void testFindTransactionDtoByTaskId() {
-        service.create(transaction);
-        assertThat(transaction).isEqualToIgnoringGivenFields(
-                service.findByTaskId(transaction.getTaskId()).get(0), "id",
-                "createdDate", "updatedDate");
-    }
-
-    @Test
-    public void testFindTransactionDtoByTaskId_amountOfTransactions() {
-        List<TransactionDto> list = new ArrayList<>();
-        for (int i = 1; i < 4; i++) {
-            transaction.setId((long) i);
-            service.create(transaction);
-            list.add(transaction);
-            assertThat(list.get(i - 1)).isEqualToIgnoringGivenFields(
-                    service.findByTaskId(transaction.getTaskId()).get(i - 1),
-                    "createdDate", "updatedDate");
-        }
-    }
-
-    @Test
-    public void testFindTransactionDtoByTaskId_emptyList() {
-        assertThat(new ArrayList()).isEqualTo(service.findByTaskId(Long.MAX_VALUE));
-    }
-
-    @Test
-    public void testUpdateTransactionDto() {
-        service.create(transaction);
-        TransactionDto updatedTransactionDto = new TransactionDto(1L, 1L,
-                800000L, 44000L,
-                LocalDateTime.now(), LocalDateTime.now());
-        service.update(updatedTransactionDto);
-        assertThat(service.findById(updatedTransactionDto.getId()))
-                .isEqualToIgnoringGivenFields(updatedTransactionDto,
+        doReturn(transaction).when(transDao).findById(transaction.getId());
+        assertThat(transService.findById(transactionDto.getId()))
+                .isEqualToIgnoringGivenFields(transDtoMapper.transactionToTransactionDto(transaction), "id",
                         "createdDate", "updatedDate");
     }
 
     @Test
-    public void testUpdateTransactionDto_invalidId() {
-        TransactionDto newTransaction = new TransactionDto(500L, 1L,
-                800000L, 44000L,
-                LocalDateTime.now(), LocalDateTime.now());
-        assertThrows(NotFoundException.class, () -> service.update(newTransaction));
+    public void testFindTransactionsDtoByTaskId() {
+        List<Transaction> transList = Collections.singletonList(transaction);
+        List<TransactionDto> transDtoList = Collections.singletonList(
+                transDtoMapper.transactionToTransactionDto(transaction));
+        doReturn(transList).when(transDao).findByTaskId(transaction.getTaskId());
+        assertEquals(transDtoList, transService.findByTaskId(transactionDto.getTaskId()));
+    }
+
+    @Test
+    public void testFindTransactionsDtoByTaskId_emptyList() {
+        assertThat(Collections.emptyList()).isEqualTo(transService.findByTaskId(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void testUpdateTransactionDto() {
+        doReturn(transaction).when(transDao).update(transaction);
+        assertThat(transService.update(transactionDto)).isEqualToIgnoringGivenFields(
+                transDtoMapper.transactionToTransactionDto(transaction),
+                "createdAt", "updatedAt");
     }
 
     @Test
     public void testDeleteTransactionDto() {
-        service.create(transaction);
-        assertTrue(service.delete(1L));
+        doReturn(true).when(transDao).delete(transaction.getId());
+        assertTrue(transService.delete(transactionDto.getId()));
     }
 
-    @Test
-    public void testDeleteTransactionDto_invalidId() {
-        assertThrows(NotFoundException.class, () -> service.delete(Long.MAX_VALUE));
-    }
-
-    @AfterEach
-    public void cleanTransactions() {
-        clearTables("Transactions");
-    }
 }

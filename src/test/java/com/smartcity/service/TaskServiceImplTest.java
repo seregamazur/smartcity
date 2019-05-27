@@ -1,20 +1,16 @@
 package com.smartcity.service;
 
-import com.smartcity.config.ProfileConfig;
 import com.smartcity.dao.TaskDao;
 import com.smartcity.domain.Task;
 import com.smartcity.dto.TaskDto;
 import com.smartcity.mapperDto.TaskDtoMapper;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 
 import java.time.LocalDateTime;
 import java.util.Arrays;
@@ -25,9 +21,7 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.doReturn;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {ProfileConfig.class})
+@ExtendWith(MockitoExtension.class)
 class TaskServiceImplTest {
 
     private TaskDto taskDto = new TaskDto(2L, "Santa", "Task for Santa",
@@ -39,8 +33,7 @@ class TaskServiceImplTest {
     @Mock
     private TaskDao taskDao;
 
-    @Autowired
-    private TaskDtoMapper taskDtoMapper;
+    private TaskDtoMapper taskDtoMapper = new TaskDtoMapper();
 
     @InjectMocks
     private TaskServiceImpl taskService;

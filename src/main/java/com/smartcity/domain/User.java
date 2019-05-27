@@ -14,7 +14,7 @@ import java.util.Objects;
 @Component
 public class User implements UserDetails {
 
-    private RoleDaoImpl roleDao = ApplicationContextHolder.getContext().getBean(RoleDaoImpl.class);
+    private static RoleDaoImpl roleDao = ApplicationContextHolder.getContext().getBean(RoleDaoImpl.class);
 
     private Long id;
     private String password;
