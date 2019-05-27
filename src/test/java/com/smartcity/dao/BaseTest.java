@@ -57,7 +57,7 @@ public class BaseTest {
         template.update("Insert into Tasks() values (1,'Title','Desc','2019-05-05','Santa',1000,1000,'2019-05-05','2019-05-05',1);");
         template.update("Insert into Transactions() values (1,1,12000,6000,'2019-05-05','2019-05-05');");
         template.update("Insert into Budget() values (120000);");
-        template.update("Insert into Roles() values (1,'Admin','2019-05-05','2019-05-05');");
+        template.update("Insert into Roles() values (1,'ADMIN','2019-05-05','2019-05-05');");
         template.update("Insert into Users_roles() values (1,1,1,'2019-05-05','2019-05-05');");
         template.update("Insert into Comments() values (1,'Comment desc','2019-05-05','2019-05-05',1,1);");
     }
