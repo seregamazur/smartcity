@@ -62,7 +62,7 @@ class TaskControllerTest {
         mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(resultJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(task.getId()))
                 .andExpect(jsonPath("title").value(task.getTitle()))
                 .andExpect(jsonPath("description").value(task.getDescription()))
