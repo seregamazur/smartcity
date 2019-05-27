@@ -1,13 +1,8 @@
 package com.smartcity.config;
 
-import com.smartcity.security.jwt.JwtConfigurer;
-import com.smartcity.security.jwt.JwtTokenProvider;
-import com.smartcity.service.UserServiceImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
@@ -17,9 +12,12 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import com.smartcity.security.jwt.JwtConfigurer;
+import com.smartcity.security.jwt.JwtTokenProvider;
+import com.smartcity.service.UserServiceImpl;
+
 @Configuration
 @EnableWebSecurity
-@ComponentScan(basePackages = "com.smartcity")
 @EnableGlobalMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
 
@@ -47,9 +45,20 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()
                 .authorizeRequests()
-                .antMatchers("/auth/signin", "/registration").permitAll()
-                .antMatchers(HttpMethod.GET).hasRole("USER")
-                .antMatchers(HttpMethod.DELETE, "/users/**").hasRole("ADMIN")
+               .antMatchers("/", "/csrf",
+                   "/v2/api-docs",
+                   "/swagger-resources/configuration/ui",
+                   "/configuration/ui",
+                   "/swagger-resources",
+                   "/swagger-resources/configuration/security",
+                   "/configuration/security",
+                   "/swagger-ui.html",
+                   "/webjars/**",
+                   "/auth/signin",
+                   "/registration").permitAll()
+            //TODO uncomment when there will be a logic for assigning user roles
+                //.antMatchers(HttpMethod.GET).hasRole("USER")
+                //.antMatchers(HttpMethod.DELETE, "**/users/**").hasRole("ADMIN")
                 .anyRequest().authenticated()
                 .and()
                 .apply(new JwtConfigurer(jwtTokenProvider));
@@ -59,7 +68,7 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
     @Override
     protected void configure(AuthenticationManagerBuilder auth) throws Exception {
         auth.userDetailsService(userService)
-                .passwordEncoder(passwordEncoder);
+            .passwordEncoder(passwordEncoder);
     }
 }
 

@@ -1,5 +1,6 @@
 package com.smartcity.controller;
 
+import com.smartcity.domain.User;
 import com.smartcity.dto.AuthenticationRequest;
 import com.smartcity.security.jwt.JwtTokenProvider;
 import com.smartcity.service.UserServiceImpl;
@@ -44,8 +45,9 @@ public class AuthController {
 
         try {
             String username = data.getUsername();
+            User user = userDetailsService.loadUserByUsername(username);
             authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(username, data.getPassword()));
-            String token = jwtTokenProvider.createToken(username, userDetailsService.loadUserByUsername(username).getAuthorities().stream().map(r -> r.getAuthority()).collect(Collectors.toList()));
+            String token = jwtTokenProvider.createToken(username, user.getAuthorities().stream().map(r -> r.getAuthority()).collect(Collectors.toList()));
             Map<Object, Object> model = new HashMap<>();
             model.put("username", username);
             model.put("token", token);
