@@ -1,8 +1,10 @@
 package com.smartcity.service;
 
 import com.smartcity.dto.UserDto;
+import org.springframework.stereotype.Component;
 
-public interface UserService {
+@Component
+public interface UserService  {
 
     UserDto create(UserDto user);
 

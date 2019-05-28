@@ -1,12 +1,9 @@
 package com.smartcity.service;
 
-import com.smartcity.domain.Task;
 import com.smartcity.dto.TaskDto;
-import org.springframework.stereotype.Service;
 
 import java.util.List;
 
-@Service
 public interface TaskService {
 
     TaskDto create(TaskDto task);

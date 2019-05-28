@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.dao.EmptyResultDataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.jdbc.support.GeneratedKeyHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Repository;
 
 import javax.sql.DataSource;
@@ -25,9 +26,12 @@ public class UserDaoImpl implements UserDao {
 
     private Logger logger = LoggerFactory.getLogger(UserDaoImpl.class);
 
+    private PasswordEncoder passwordEncoder;
+
     @Autowired
     public UserDaoImpl(DataSource dataSource) {
         this.jdbcTemplate = new JdbcTemplate(dataSource);
+        this.passwordEncoder  = new EncryptionUtil();
     }
 
     @Override
@@ -36,7 +40,7 @@ public class UserDaoImpl implements UserDao {
             LocalDateTime currentDate = LocalDateTime.now();
 
             GeneratedKeyHolder holder = new GeneratedKeyHolder();
-            String encryptedPassword = EncryptionUtil.encryptPassword(user.getPassword());
+            String encryptedPassword = passwordEncoder.encode(user.getPassword());
 
             jdbcTemplate.update(con -> {
                         PreparedStatement ps = con.prepareStatement(
@@ -62,8 +66,7 @@ public class UserDaoImpl implements UserDao {
             user.setId(holder.getKey().longValue());
 
             return user;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Create user (id = {}) exception. Message: {}", user.getId(), e.getMessage());
             throw new DbOperationException("Create user exception");
         }
@@ -76,11 +79,9 @@ public class UserDaoImpl implements UserDao {
                     UserMapper.getInstance(), (Long) id);
 
             return user;
-        }
-        catch (EmptyResultDataAccessException ex) {
+        } catch (EmptyResultDataAccessException ex) {
             throw getAndLogUserNotFoundException(id);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Get user (id = {}) exception. Message: {}", id, e.getMessage());
             throw new DbOperationException("Get user exception");
         }
@@ -93,15 +94,13 @@ public class UserDaoImpl implements UserDao {
                     UserMapper.getInstance(), email);
 
             return user;
-        }
-        catch (EmptyResultDataAccessException ex) {
+        } catch (EmptyResultDataAccessException ex) {
             NotFoundException notFoundException = new NotFoundException("User not found");
             logger.error("Runtime exception. User not found (email = {}). Message: {}",
                     email, notFoundException.getMessage());
 
             throw notFoundException;
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Get user (email = {}) exception. Message: {}", email, e.getMessage());
             throw new DbOperationException("Get user exception");
         }
@@ -126,8 +125,7 @@ public class UserDaoImpl implements UserDao {
 
             user.setUpdatedDate(updatedDate);
 
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Update user (id = {}) exception. Message: {}", user.getId(), e.getMessage());
             throw new DbOperationException("Update user exception");
         }
@@ -146,16 +144,14 @@ public class UserDaoImpl implements UserDao {
 
         try {
             rowsAffected = jdbcTemplate.update(Queries.SQL_SET_ACTIVE_STATUS_USER, false, id);
-        }
-        catch (Exception e) {
+        } catch (Exception e) {
             logger.error("Delete user (id = {}) exception. Message: {}", id, e.getMessage());
             throw new DbOperationException("Delete user exception");
         }
 
         if (rowsAffected < 1) {
             throw getAndLogUserNotFoundException(id);
-        }
-        else {
+        } else {
             return true;
         }
     }
@@ -165,7 +161,7 @@ public class UserDaoImpl implements UserDao {
         int rowsAffected;
 
         try {
-            String encryptedPassword = EncryptionUtil.encryptPassword(newPassword);
+            String encryptedPassword = passwordEncoder.encode(newPassword);
             rowsAffected = jdbcTemplate.update(Queries.SQL_UPDATE_USER_PASSWORD, encryptedPassword, userId);
         }
         catch (Exception e) {

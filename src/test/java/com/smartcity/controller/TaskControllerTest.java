@@ -2,27 +2,23 @@ package com.smartcity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.smartcity.config.ProfileConfig;
 import com.smartcity.dto.TaskDto;
-import com.smartcity.mapperDto.TaskDtoMapper;
 import com.smartcity.service.TaskService;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Arrays;
 import java.util.List;
 
@@ -32,14 +28,13 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@ContextConfiguration(classes = {ProfileConfig.class})
+@ExtendWith(MockitoExtension.class)
 class TaskControllerTest {
-    private TaskDto task = new TaskDto(2L, "Santa", "Task for Santa",
-            LocalDateTime.now(), "TODO",
-            1000L, 1000L, LocalDateTime.now(),
-            LocalDateTime.now(), 1L);
+    private final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm:ss.SSS");
+    private final LocalDateTime dateTest = LocalDateTime.parse(LocalDateTime.now().format(FORMATTER));
+
+    private TaskDto task = new TaskDto(2L, "Santa", "Task for Santa", dateTest, "TODO",
+            1000L, 1000L, dateTest, dateTest, 1L);
 
     private MockMvc mockMvc;
 
@@ -48,9 +43,6 @@ class TaskControllerTest {
 
     @InjectMocks
     private TaskController taskController;
-
-    @Autowired
-    TaskDtoMapper taskDtoMapper;
 
     @BeforeEach
     public void init() {
@@ -70,7 +62,7 @@ class TaskControllerTest {
         mockMvc.perform(post("/tasks")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(resultJson))
-                .andExpect(status().isOk())
+                .andExpect(status().isCreated())
                 .andExpect(jsonPath("id").value(task.getId()))
                 .andExpect(jsonPath("title").value(task.getTitle()))
                 .andExpect(jsonPath("description").value(task.getDescription()))

@@ -1,24 +1,19 @@
 package com.smartcity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartcity.config.ProfileConfig;
 import com.smartcity.dto.TransactionDto;
-import com.smartcity.service.TransactionService;
+import com.smartcity.service.TransactionServiceImpl;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -26,20 +21,18 @@ import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.mockito.Mockito.doReturn;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@WebAppConfiguration
-@ActiveProfiles(profiles = "test")
-@ContextConfiguration(classes = {ProfileConfig.class})
+@ExtendWith(MockitoExtension.class)
 class TransactionControllerTest {
-    @MockBean
-    private TransactionService transService;
+    @Mock
+    private TransactionServiceImpl transService;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @InjectMocks
+    private TransactionController controller;
 
     private MockMvc mockMvc;
     private TransactionDto transDto;
@@ -47,7 +40,10 @@ class TransactionControllerTest {
 
     @BeforeEach
     void init() {
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(controller)
+                .build();
         transDto = new TransactionDto(1L, 1L,
                 5000L, 3000L,
                 null, null);
@@ -55,7 +51,7 @@ class TransactionControllerTest {
 
     @Test
     public void testCreateTransaction() throws Exception {
-        Mockito.when(transService.create(transDto)).thenReturn(transDto);
+        doReturn(transDto).when(transService).create(transDto);
         String json = objMapper.writeValueAsString(transDto);
         mockMvc.perform(post("/transactions")
                 .contentType(MediaType.APPLICATION_JSON)
@@ -70,7 +66,7 @@ class TransactionControllerTest {
     @Test
     public void testUpdateTransaction() throws Exception {
         TransactionDto updatedTrans = new TransactionDto(1L, 1L, 400L, 200L, null, null);
-        Mockito.when(transService.update(updatedTrans)).thenReturn(updatedTrans);
+        doReturn(updatedTrans).when(transService).update(updatedTrans);
         String json = objMapper.writeValueAsString(updatedTrans);
         mockMvc.perform(put("/transactions/" + updatedTrans.getId())
                 .contentType(MediaType.APPLICATION_JSON)
@@ -87,7 +83,7 @@ class TransactionControllerTest {
 
     @Test
     public void testDeleteTransaction() throws Exception {
-        Mockito.when(transService.delete(transDto.getId())).thenReturn(true);
+        doReturn(true).when(transService).delete(transDto.getId());
         mockMvc.perform(delete("/transactions/" + transDto.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk());
@@ -95,7 +91,7 @@ class TransactionControllerTest {
 
     @Test
     public void testFindByIdTransaction() throws Exception {
-        Mockito.when(transService.findById(transDto.getId())).thenReturn(transDto);
+        doReturn(transDto).when(transService).findById(transDto.getId());
         mockMvc.perform(get("/transactions/" + transDto.getId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -108,7 +104,7 @@ class TransactionControllerTest {
     @Test
     public void testFindByTaskIdTransaction() throws Exception {
         List<TransactionDto> startList = Collections.singletonList(transDto);
-        Mockito.when(transService.findByTaskId(transDto.getTaskId())).thenReturn(startList);
+        doReturn(startList).when(transService).findByTaskId(transDto.getTaskId());
         final MvcResult result = mockMvc.perform(get("/transactions/findByTask?id=" + transDto.getTaskId())
                 .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk()).andReturn();
