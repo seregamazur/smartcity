@@ -12,8 +12,10 @@ import java.time.LocalDateTime;
 
 public class CommentDto {
 
-    @Null(groups = {NewRecord.class})
-    @NotNull(groups = {ExistingRecord.class})
+    @Null(groups = {NewRecord.class},
+            message = "This field must be empty due to auto generation")
+    @NotNull(groups = {ExistingRecord.class},
+            message = "This field can't be empty")
     private Long id;
 
     @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
@@ -21,17 +23,22 @@ public class CommentDto {
     private String description;
 
 
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     private LocalDateTime createdDate;
 
 
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 
-    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field can't be empty")
     private Long userId;
 
-    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field can't be empty")
     private Long taskId;
 
     public CommentDto() {

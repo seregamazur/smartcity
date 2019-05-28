@@ -13,8 +13,10 @@ import java.util.Objects;
         message = "Approved budget should be less than budget")
 public class TaskDto {
 
-    @Null(groups = {NewRecord.class})
-    @NotNull(groups = {ExistingRecord.class})
+    @Null(groups = {NewRecord.class},
+            message = "This field must be empty due to auto generation")
+    @NotNull(groups = {ExistingRecord.class},
+            message = "This field can't be empty")
     private Long id;
 
     @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
@@ -32,24 +34,30 @@ public class TaskDto {
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime deadlineDate;
 
-    @NotBlank(groups = {NewRecord.class, ExistingRecord.class})
+    @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field can't be empty")
     private String taskStatus;
 
     @NotNull(groups = {NewRecord.class, ExistingRecord.class},
             message = "Please, add a budget")
     @Min(groups = {NewRecord.class, ExistingRecord.class},
-            value = 0)
+            value = 0, message = "Budget must be greater than 0")
     private Long budget;
 
     private Long approvedBudget;
 
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdAt;
 
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedAt;
 
-    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field can't be empty")
     private Long usersOrganizationsId;
 
     public TaskDto(Long id, String title, String description, LocalDateTime deadlineDate, String taskStatus,

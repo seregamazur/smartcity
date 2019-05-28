@@ -10,8 +10,10 @@ import java.util.Objects;
 
 public class UserDto {
 
-    @Null(groups = {NewRecord.class})
-    @NotNull(groups = {ExistingRecord.class})
+    @Null(groups = {NewRecord.class},
+            message = "This field must be empty due to auto generation")
+    @NotNull(groups = {ExistingRecord.class},
+            message = "This field can't be empty")
     private Long id;
 
     @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
@@ -35,15 +37,21 @@ public class UserDto {
     @NotBlank(groups = {NewRecord.class, ExistingRecord.class},
             message = "Please provide a phone number")
     @Pattern(groups = {NewRecord.class, ExistingRecord.class},
-            regexp = "^\\+(?:[0-9] ?){6,14}[0-9]$")
+            regexp = "^\\+(?:[0-9] ?){6,14}[0-9]$",
+            message = "Please provide a valid phone number")
     private String phoneNumber;
 
-    @NotNull(groups = {NewRecord.class, ExistingRecord.class})
+    @NotNull(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field can't be empty")
     private boolean active;
 
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime createdDate;
 
+    @Null(groups = {NewRecord.class, ExistingRecord.class},
+            message = "This field must be empty due to auto generation")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd'T'HH:mm:ss.SSS")
     private LocalDateTime updatedDate;
 
