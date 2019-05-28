@@ -1,40 +1,33 @@
 package com.smartcity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.smartcity.config.ProfileConfig;
 import com.smartcity.dto.UserDto;
 import com.smartcity.service.UserService;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
+import org.mockito.MockitoAnnotations;
 import org.springframework.http.MediaType;
-import org.springframework.test.context.ActiveProfiles;
-import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
-import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
-import org.springframework.web.context.WebApplicationContext;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@WebAppConfiguration
-@ContextConfiguration(classes = {ProfileConfig.class})
+@ExtendWith(MockitoExtension.class)
 class UserControllerTest {
 
-    @MockBean
+    @Mock
     private UserService userService;
 
-    @Autowired
-    private WebApplicationContext webApplicationContext;
+    @InjectMocks
+    private UserController userController;
 
     private MockMvc mockMvc;
 
@@ -43,7 +36,10 @@ class UserControllerTest {
     @BeforeEach
     void setUp() {
         // Getting instance of mockMvc
-        this.mockMvc = MockMvcBuilders.webAppContextSetup(this.webApplicationContext).build();
+        MockitoAnnotations.initMocks(this);
+        mockMvc = MockMvcBuilders
+                .standaloneSetup(userController)
+                .build();
 
         userDto = new UserDto();
         userDto.setId(1L);

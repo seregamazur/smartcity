@@ -88,7 +88,6 @@ public class UserDaoImplTest extends BaseTest {
         User updatedUser = new User();
         updatedUser.setId(user.getId());
         updatedUser.setEmail("updated@gmail.com");
-        updatedUser.setPassword("qwerty");
         updatedUser.setSurname("Smith");
         updatedUser.setName("Den");
         updatedUser.setPhoneNumber("0333333333");
@@ -97,13 +96,13 @@ public class UserDaoImplTest extends BaseTest {
         // Updating
         userDao.update(updatedUser);
 
-        updatedUser.setPassword(passwordEncoder.encode(updatedUser.getPassword()));
 
         // Getting user from db
         User resultUser = userDao.get(user.getId());
 
         // Checking if both are equal
-        assertThat(updatedUser).isEqualToIgnoringGivenFields(resultUser, "createdDate", "updatedDate");
+        assertThat(updatedUser).isEqualToIgnoringGivenFields(resultUser,
+                "createdDate", "updatedDate", "password");
     }
 
     @Test

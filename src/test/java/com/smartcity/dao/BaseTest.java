@@ -1,7 +1,6 @@
 package com.smartcity.dao;
 
-import javax.sql.DataSource;
-
+import com.smartcity.config.ProfileConfig;
 import org.junit.jupiter.api.AfterAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -10,15 +9,14 @@ import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit.jupiter.SpringExtension;
-
-import com.smartcity.config.ProfileConfig;
-
 import org.springframework.test.context.web.WebAppConfiguration;
+
+import javax.sql.DataSource;
 
 @ExtendWith(SpringExtension.class)
 @ActiveProfiles("test")
 @WebAppConfiguration
-@ContextConfiguration(classes = { ProfileConfig.class })
+@ContextConfiguration(classes = {ProfileConfig.class})
 public class BaseTest {
 
     @Autowired
@@ -29,17 +27,18 @@ public class BaseTest {
 
     @BeforeEach
     public void setupBudgetTests() {
-        if(!isInitialized) {
+        if (!isInitialized) {
             setup();
             isInitialized = true;
         }
     }
 
     @AfterAll
-    public static void afterAll(){
+    public static void afterAll() {
         try {
             tearDown();
-        } finally {
+        }
+        finally {
             isInitialized = false;
         }
     }
@@ -64,16 +63,16 @@ public class BaseTest {
 
     public static void tearDown() {
         template.batchUpdate("set foreign_key_checks=0",
-            "TRUNCATE TABLE Users",
-            "TRUNCATE TABLE Organizations",
-            "TRUNCATE TABLE Users_organizations",
-            "TRUNCATE TABLE Tasks",
-            "TRUNCATE TABLE Transactions",
-            "TRUNCATE TABLE Comments",
-            "TRUNCATE TABLE Roles",
-            "TRUNCATE TABLE Users_roles",
-            "TRUNCATE TABLE Budget",
-            "set foreign_key_checks=1");
+                "TRUNCATE TABLE Users",
+                "TRUNCATE TABLE Organizations",
+                "TRUNCATE TABLE Users_organizations",
+                "TRUNCATE TABLE Tasks",
+                "TRUNCATE TABLE Transactions",
+                "TRUNCATE TABLE Comments",
+                "TRUNCATE TABLE Roles",
+                "TRUNCATE TABLE Users_roles",
+                "TRUNCATE TABLE Budget",
+                "set foreign_key_checks=1");
     }
 
     public void clearTables(String... tableNames) {
