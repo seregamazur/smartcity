@@ -5,40 +5,46 @@ import com.smartcity.dao.UserDao;
 import com.smartcity.domain.User;
 import com.smartcity.dto.UserDto;
 import com.smartcity.mapperDto.UserDtoMapper;
+import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.mockito.Mockito;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.mock.mockito.MockBean;
-import org.springframework.test.context.ActiveProfiles;
+import org.mockito.MockitoAnnotations;
 import org.springframework.test.context.ContextConfiguration;
-import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.test.context.web.WebAppConfiguration;
 
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.*;
 
-@ExtendWith(SpringExtension.class)
-@ActiveProfiles("test")
-@WebAppConfiguration
+
 @ContextConfiguration(classes = {ProfileConfig.class})
+@ExtendWith(MockitoExtension.class)
+@WebAppConfiguration
 class UserServiceImplTest {
 
-    @Autowired
-    private UserService userService;
-
-    @Autowired
-    private UserDtoMapper userDtoMapper;
-
-    @MockBean
+    @Mock
     private UserDao userDao;
 
+    @InjectMocks
+    private UserServiceImpl userService;
+
+    private UserDtoMapper userDtoMapper;
+
     private UserDto userDto;
+
     private User user;
 
     @BeforeEach
     void setUp() {
+        MockitoAnnotations.initMocks(this);
+
+        userDtoMapper = new UserDtoMapper();
+
+        userService = new UserServiceImpl(userDao, userDtoMapper);
+
         userDto = new UserDto();
         userDto.setName("User");
         userDto.setSurname("Test");

@@ -1,8 +1,9 @@
 package com.smartcity.domain;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.smartcity.config.ApplicationContextHolder;
 import com.smartcity.dao.RoleDaoImpl;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.config.BeanDefinition;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
@@ -11,10 +12,10 @@ import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.Objects;
 
-@Component
+@Component(BeanDefinition.SCOPE_PROTOTYPE)
 public class User implements UserDetails {
 
-    private static RoleDaoImpl roleDao = ApplicationContextHolder.getContext().getBean(RoleDaoImpl.class);
+    private static RoleDaoImpl roleDao;
 
     private Long id;
     private String password;
@@ -178,5 +179,10 @@ public class User implements UserDetails {
                 ", createdDate=" + createdDate +
                 ", updatedDate=" + updatedDate +
                 '}';
+    }
+
+    @Autowired(required = false)
+    public static void setRoleDao(RoleDaoImpl roleDao) {
+        User.roleDao = roleDao;
     }
 }
