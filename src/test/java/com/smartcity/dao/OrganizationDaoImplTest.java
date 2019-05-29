@@ -16,6 +16,8 @@ class OrganizationDaoImplTest extends BaseTest {
 
     @Autowired
     private OrganizationDao organizationDao;
+    @Autowired
+    private UserDao userDao;
 
     private Organization organization = new Organization(1L,
             "komunalna",
@@ -104,6 +106,12 @@ class OrganizationDaoImplTest extends BaseTest {
                 "createdDate", "updatedDate");
 
     }
+
+    @Test
+    public void testAddUserToOrganization() {
+        assertTrue(organizationDao.addUserToOrganization(organizationDao.create(organization), userDao.get(1L)));
+    }
+
 
     @AfterEach
     public void cleanOrganization() {

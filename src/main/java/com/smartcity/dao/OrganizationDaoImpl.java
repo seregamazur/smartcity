@@ -1,6 +1,7 @@
 package com.smartcity.dao;
 
 import com.smartcity.domain.Organization;
+import com.smartcity.domain.User;
 import com.smartcity.exceptions.DbOperationException;
 import com.smartcity.exceptions.NotFoundException;
 import com.smartcity.mapper.OrganizationMapper;
@@ -120,6 +121,24 @@ public class OrganizationDaoImpl implements OrganizationDao {
         }
     }
 
+    @Override
+    public boolean addUserToOrganization(Organization organization, User user) {
+        try {
+            LocalDateTime currDate = LocalDateTime.now();
+            jdbcTemplate.update(Queries.SQL_ORGANIZATION_ADD_USER_TO_ORGANIZATION, preparedStatement -> {
+                preparedStatement.setLong(1, user.getId());
+                preparedStatement.setLong(2, organization.getId());
+                preparedStatement.setObject(3, currDate);
+                preparedStatement.setObject(4, currDate);
+            });
+            return true;
+        } catch (Exception e) {
+            logger.error("Can't add user:{} to organization:{}. Error:{}", user, organization, e.getMessage());
+            throw new DbOperationException("Can't add user to organization." +
+                    " AddUserToOrganization organization Dao method error:" + e);
+        }
+    }
+
     class Queries {
         static final String SQL_ORGANIZATION_CREATE = "INSERT INTO Organizations(name, address, created_date," +
                 " updated_date) values(?,?,?,?)";
@@ -128,6 +147,8 @@ public class OrganizationDaoImpl implements OrganizationDao {
                 " updated_date = ? where id = ?";
         static final String SQL_ORGANIZATION_DELETE = "DELETE FROM Organizations where id = ?";
         static final String SQL_ORGANIZATION_GET_ALL = "Select * from Organizations";
+        static final String SQL_ORGANIZATION_ADD_USER_TO_ORGANIZATION = "INSERT INTO Users_organizations" +
+                " (user_id, organization_id, created_date, updated_date) VALUES (?, ?, ?, ?)";
     }
 }
 

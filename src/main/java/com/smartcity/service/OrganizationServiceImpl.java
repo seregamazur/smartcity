@@ -3,7 +3,9 @@ package com.smartcity.service;
 import com.smartcity.dao.OrganizationDao;
 import com.smartcity.domain.Organization;
 import com.smartcity.dto.OrganizationDto;
+import com.smartcity.dto.UserDto;
 import com.smartcity.mapperDto.OrganizationDtoMapper;
+import com.smartcity.mapperDto.UserDtoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -15,11 +17,13 @@ public class OrganizationServiceImpl implements OrganizationService {
 
     private OrganizationDao organizationDao;
     private OrganizationDtoMapper organizationDtoMapper;
+    private UserDtoMapper userDtoMapper;
 
     @Autowired
-    public OrganizationServiceImpl(OrganizationDao organizationDao, OrganizationDtoMapper organizationDtoMapper) {
+    public OrganizationServiceImpl(OrganizationDao organizationDao, OrganizationDtoMapper organizationDtoMapper, UserDtoMapper userDtoMapper) {
         this.organizationDao = organizationDao;
         this.organizationDtoMapper = organizationDtoMapper;
+        this.userDtoMapper = userDtoMapper;
     }
 
     @Override
@@ -47,6 +51,13 @@ public class OrganizationServiceImpl implements OrganizationService {
     @Override
     public List<OrganizationDto> getAll() {
         return mapListDto(organizationDao.getAll());
+    }
+
+    @Override
+    public boolean addUserToOrganization(OrganizationDto organizationDto, UserDto userDto) {
+        return organizationDao.addUserToOrganization(
+                organizationDtoMapper.organizationDtoToOrganization(organizationDto),
+                userDtoMapper.convertUserDtoIntoUser(userDto));
     }
 
     private List<OrganizationDto> mapListDto(List<Organization> organizations) {

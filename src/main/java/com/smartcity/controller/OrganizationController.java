@@ -1,9 +1,11 @@
 package com.smartcity.controller;
 
 import com.smartcity.dto.OrganizationDto;
+import com.smartcity.dto.UserDto;
 import com.smartcity.dto.transfer.ExistingRecord;
 import com.smartcity.dto.transfer.NewRecord;
 import com.smartcity.service.OrganizationService;
+import com.smartcity.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -16,10 +18,12 @@ import java.util.List;
 @RequestMapping("/organizations")
 public class OrganizationController {
     private OrganizationService organizationService;
+    private UserService userService;
 
     @Autowired
-    public OrganizationController(OrganizationService organizationService) {
+    public OrganizationController(OrganizationService organizationService, UserService userService) {
         this.organizationService = organizationService;
+        this.userService = userService;
     }
 
     @ResponseStatus(HttpStatus.CREATED)
@@ -54,6 +58,13 @@ public class OrganizationController {
     @GetMapping
     public List<OrganizationDto> getAll() {
         return organizationService.getAll();
+    }
+
+    @ResponseStatus(HttpStatus.CREATED)
+    @PostMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
+    public boolean addUserToOrganization(@PathVariable("id") Long OrganizationId, @RequestBody UserDto userDto) {
+        return organizationService.addUserToOrganization(organizationService.get(OrganizationId),
+                userDto);
     }
 
 }

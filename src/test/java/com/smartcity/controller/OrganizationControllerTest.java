@@ -2,6 +2,7 @@ package com.smartcity.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.smartcity.dto.OrganizationDto;
+import com.smartcity.dto.UserDto;
 import com.smartcity.service.OrganizationServiceImpl;
 import name.falgout.jeffrey.testing.junit.mockito.MockitoExtension;
 import org.junit.jupiter.api.BeforeEach;
@@ -111,11 +112,28 @@ class OrganizationControllerTest {
 
         mockMvc.perform(get("/organizations")
                 .contentType(MediaType.APPLICATION_JSON))
-                .andExpect(status().isOk())
                 .andExpect(jsonPath("$", hasSize(1)))
                 .andExpect(jsonPath("$[0].id", is(1)))
                 .andExpect(jsonPath("$[0].name", is(organizationDto.getName())))
                 .andExpect(jsonPath("$[0].address", is(organizationDto.getAddress())));
 
+    }
+
+    @Test
+    public void addUserToOrganization_successFlow() throws Exception {
+        UserDto userDto = new UserDto();
+        userDto.setId(1L);
+        userDto.setName("User");
+        userDto.setSurname("Test");
+        userDto.setEmail("example@gmail.com");
+
+        Mockito.when(organizationService.addUserToOrganization(organizationDto, userDto)).thenReturn(true);
+
+        String requestObjectJson = objectMapper.writeValueAsString(userDto);
+
+        mockMvc.perform(post("/organizations/" + organizationDto.getId())
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(requestObjectJson))
+                .andExpect(status().isCreated());
     }
 }
