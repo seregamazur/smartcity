@@ -35,7 +35,7 @@ public class UserDaoImplTest extends BaseTest {
         // Creating user
         userDao.create(user);
     }
-
+/*
     @Test
     public void testCreate_successFlow() {
         // should return reference to that same object
@@ -43,7 +43,7 @@ public class UserDaoImplTest extends BaseTest {
         assertThat(user.getId()).isNotNull();
         assertTrue(user.isActive());
     }
-
+*/
     @Test
     public void testCreate_omittedNotNullFields() {
         // Creating empty user item
